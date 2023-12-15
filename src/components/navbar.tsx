@@ -3,6 +3,7 @@ import { Icons } from './icons'
 import MaxWidthWrapper from './maxWidthWrapper'
 import { NavItems } from './navItems'
 import { buttonVariants } from './ui/button'
+import Cart from './cart'
 
 export default function Navbar (): JSX.Element {
   const user = null
@@ -21,7 +22,6 @@ export default function Navbar (): JSX.Element {
           </div>
           <div className='ml-auto flex items-center '>
             <div className='hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6'>
-
               {user
                 ? null
                 : <Link
@@ -59,10 +59,10 @@ export default function Navbar (): JSX.Element {
                       </span>
                    </div> }
               <div className='ml-4 flow-root lg:ml-6'>
+                <Cart></Cart>
               </div>
             </div>
           </div>
-
         </MaxWidthWrapper>
       </header>
     </div>
