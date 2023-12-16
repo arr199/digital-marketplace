@@ -41,7 +41,7 @@ export default function Navbar (): JSX.Element {
                 ? null
                 : <Link
                   className={buttonVariants({ variant: 'ghost' })}
-                  href="#">
+                  href="/sign-up">
                   Create account
                   </Link>}
               {user

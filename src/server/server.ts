@@ -14,6 +14,7 @@ async function start (): Promise<any> {
       }
     }
   })
+
   app.use(async (req, res) => { await nextHandler(req, res) })
 
   nextApp.prepare().then(() => {
