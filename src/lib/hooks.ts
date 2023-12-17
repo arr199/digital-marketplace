@@ -16,10 +16,8 @@ export function useOnClickOutside <T extends HTMLElement = HTMLElement> (
 
       handler(event) // Call the handler only if the click is outside of the element passed.
     }
-
     document.addEventListener('mousedown', listener)
     document.addEventListener('touchstart', listener)
-
     return () => {
       document.removeEventListener('mousedown', listener)
       document.removeEventListener('touchstart', listener)
