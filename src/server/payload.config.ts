@@ -3,15 +3,17 @@ import { slateEditor } from '@payloadcms/richtext-slate'
 import { buildConfig } from 'payload/config'
 import { webpackBundler } from '@payloadcms/bundler-webpack'
 import path from 'path'
+import { Users } from '../collections/users'
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL ?? '',
-  collections: [],
+  collections: [Users],
   routes: {
     admin: '/sell'
   },
   admin: {
     bundler: webpackBundler(),
+    user: 'users',
     meta: {
       titleSuffix: '- DigitalHippo',
       favicon: '/favicon.ico',
@@ -19,6 +21,7 @@ export default buildConfig({
     }
 
   },
+
   rateLimit: { max: 2000 },
   editor: slateEditor({}),
   db: mongooseAdapter({ url: process.env.MONGODB_URL ?? '' }),

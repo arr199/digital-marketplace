@@ -9,12 +9,15 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type AuthCredentials, AuthCredentialsSchema } from '@/lib/zod-schemas'
+import { trpc } from '@/trpc/client'
 
 export default function Page (): JSX.Element {
   const { register, handleSubmit, formState } = useForm<AuthCredentials>({ resolver: zodResolver(AuthCredentialsSchema) })
 
-  function onSubmit ({ email, password }: AuthCredentials) {
+  const { mutate } = trpc.auth.createPayloadUser.useMutation({})
 
+  function onSubmit ({ email, password }: AuthCredentials): void {
+    mutate({ email, password })
   }
 
   return (
@@ -30,7 +33,6 @@ export default function Page (): JSX.Element {
           Already have an account? Sign-in
           <ArrowRight></ArrowRight>
         </Link>
-
         <form onSubmit={handleSubmit(onSubmit)}
         className='flex flex-col gap-6 w-full max-w-md'>
           <div className='flex flex-col gap-2'>
@@ -46,7 +48,7 @@ export default function Page (): JSX.Element {
           </div>
           <div className='flex flex-col gap-2'>
             <Label htmlFor="password">Password</Label>
-            <Input {...register('password')}
+            <Input {...register('password')} type='password'
               className={cn({
                 'focus-visible:ring-red-500': formState.errors.password
               })}

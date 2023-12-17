@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import express from 'express'
 import { getPayloadClient } from './get-payload'
 import { nextApp, nextHandler } from './next-utils'
+import * as trpcExpress from '@trpc/server/adapters/express'
+import { appRouter } from '../trpc'
 
 const app = express()
 const PORT = Number(process.env.PORT) ?? 3400
+const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => ({
+  req, res
+})
 
 async function start (): Promise<any> {
   const payload = await getPayloadClient({
@@ -15,6 +21,11 @@ async function start (): Promise<any> {
     }
   })
 
+  app.use('/api/trpc', trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext
+
+  }))
   app.use(async (req, res) => { await nextHandler(req, res) })
 
   nextApp.prepare().then(() => {
