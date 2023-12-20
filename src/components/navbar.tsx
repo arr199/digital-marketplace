@@ -4,9 +4,14 @@ import MaxWidthWrapper from './maxWidthWrapper'
 import { NavItems } from './navItems'
 import { buttonVariants } from './ui/button'
 import Cart from './cart'
+import { getServerSideUser } from '@/lib/payload.utils'
+import { cookies } from 'next/headers'
 
-export default function Navbar (): JSX.Element {
-  const user = null
+export default async function Navbar (): Promise<JSX.Element> {
+  const nextCookies = cookies()
+  const user = await getServerSideUser(nextCookies)
+
+  console.log('navbar user :', user)
 
   return (
     <div className="sticky z-50 top-0 h-16  bg-white">

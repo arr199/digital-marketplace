@@ -6,6 +6,7 @@ function handler (req: Request): void {
     endpoint: '/api/trpc',
     router: appRouter,
     req,
+    // @ts-expect-error context already passed from express
     createContext: () => ({})
   }).catch(err => { console.log(err) })
 }
