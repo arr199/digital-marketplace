@@ -2,7 +2,9 @@
     "watch": [
       "server.ts",
       "src/collections/**/*.ts",
-      "src/trpc/index.ts"
+      "src/trpc/index.ts",
+      "src/trpc/auth-router.ts"
+
     ],
     "exec": "ts-node --project tsconfig.server.json src/server/server.ts -- -I",
     "ext": "js ts",

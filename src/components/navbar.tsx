@@ -4,9 +4,13 @@ import MaxWidthWrapper from './maxWidthWrapper'
 import { NavItems } from './navItems'
 import { buttonVariants } from './ui/button'
 import Cart from './cart'
+import { getServerSideUser } from '@/lib/payload.utils'
+import { cookies } from 'next/headers'
+import UserAccountDropDown from './UserAccountDropDown'
 
-export default function Navbar (): JSX.Element {
-  const user = null
+export default async function Navbar (): Promise<JSX.Element> {
+  const nextCookies = cookies()
+  const { user } = await getServerSideUser(nextCookies)
 
   return (
     <div className="sticky z-50 top-0 h-16  bg-white">
@@ -38,7 +42,7 @@ export default function Navbar (): JSX.Element {
                   </span> }
 
               {user
-                ? null
+                ? <UserAccountDropDown user={user}></UserAccountDropDown>
                 : <Link
                   className={buttonVariants({ variant: 'ghost' })}
                   href="/sign-up">
