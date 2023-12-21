@@ -34,6 +34,7 @@ export default function Page (): JSX.Element {
         return
       }
       router.push('/')
+      router.refresh()
     },
     onError: ({ data }) => {
       toast.error(data?.code)

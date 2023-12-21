@@ -4,10 +4,13 @@ import { buildConfig } from 'payload/config'
 import { webpackBundler } from '@payloadcms/bundler-webpack'
 import path from 'path'
 import { Users } from '../collections/users'
+import { Products } from '../collections/products/products'
+import { Media } from '../collections/media'
+import { ProductFiles } from '../collections/productFile'
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL ?? '',
-  collections: [Users],
+  collections: [Users, Products, Media, ProductFiles],
   routes: {
     admin: '/sell'
   },

@@ -17,7 +17,7 @@ export default function Page (): JSX.Element {
   const { register, handleSubmit, formState: { errors } } = useForm<AuthCredentials>({ resolver: zodResolver(AuthCredentialsSchema) })
   const router = useRouter()
 
-  const { mutate, data, isLoading, error } = trpc.auth.createPayloadUser.useMutation({
+  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({
     onError: (err) => {
       if (err.data?.code === 'CONFLICT') {
         toast.error(err.message + '.')
