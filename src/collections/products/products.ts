@@ -8,6 +8,7 @@ export const Products: CollectionConfig = {
   },
   access: {},
   fields: [
+    // USER
     {
       name: 'user',
       type: 'relationship',
@@ -18,17 +19,20 @@ export const Products: CollectionConfig = {
         condition: () => false
       }
     },
+    // NAME
     {
       name: 'name',
       label: 'Name',
       type: 'text',
       required: true
     },
+    //  DESCRIPTION
     {
       name: 'description',
       type: 'textarea',
       label: 'Product details'
     },
+    // PRICE
     {
       name: 'price',
       type: 'number',
@@ -37,6 +41,7 @@ export const Products: CollectionConfig = {
       required: true
 
     },
+    // CATEGORY
     {
       name: 'category',
       label: 'Category',
@@ -44,6 +49,7 @@ export const Products: CollectionConfig = {
       options: API.PRODUCT_CATEGORIES.map(({ label, value }) => ({ label, value })),
       required: true
     },
+    //  PRODUCT_FILES
     {
       name: 'product_files',
       label: 'Products file(s)',
@@ -52,6 +58,7 @@ export const Products: CollectionConfig = {
       required: true,
       hasMany: false
     },
+    // PRODUCT STATUS
     {
       access: {
         create: ({ req }) => req.user.role === 'admin',
@@ -69,6 +76,7 @@ export const Products: CollectionConfig = {
         { label: 'Denied', value: 'denied' }
       ]
     },
+    // PRICE ID
     {
       name: 'priceId',
       access: {
@@ -82,6 +90,7 @@ export const Products: CollectionConfig = {
       }
 
     },
+    // STRIPE ID
     {
       name: 'stripeId',
       access: {
@@ -95,6 +104,7 @@ export const Products: CollectionConfig = {
       }
 
     },
+    //  IMAGES
     {
       name: 'images',
       type: 'array',

@@ -3,7 +3,7 @@
 import API from '@/lib/API'
 import NavItem from './navitem'
 import React, { useEffect, useRef, useState } from 'react'
-import { useOnClickOutside } from '@/lib/hooks'
+import { useOnClickOutside } from '@/hooks/useOnClickOutside'
 
 export function NavItems (): JSX.Element {
   const [activeIndex, setActiveIndex] = useState<null | number>(null)

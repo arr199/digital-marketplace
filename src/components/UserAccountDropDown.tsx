@@ -10,7 +10,7 @@ import {
 import { Button } from './ui/button'
 import { type User } from '../server/payload-types'
 import Link from 'next/link'
-import { useAuth } from '@/lib/hooks'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function UserAccountDropDown ({ user }: { user: User }): JSX.Element {
   const { signOut } = useAuth()

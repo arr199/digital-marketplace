@@ -1,3 +1,4 @@
+import { type Product } from '../server/payload-types'
 import { type AccessResult } from 'payload/config'
 import { type BeforeChangeHook } from 'payload/dist/collections/config/types'
 import { type Access, type CollectionConfig } from 'payload/types'
@@ -16,13 +17,31 @@ const yourOwnOrPurchased: Access = async ({ req }): Promise<AccessResult> => {
     depth: 0,
     where: { user: { equals: user.id } }
   })
-  const ownProductFiles = products.map((prod) => prod.product_files).flat()
+  const ownProductFilesIds = products.map((prod) => prod.product_files).flat()
 
   const { docs: orders } = await req.payload.find({
-    collection: 'products',
-    depth: 0,
+    collection: 'orders',
+    depth: 2,
     where: { user: { equals: user.id } }
   })
+  const purchasedProductsFileIds = orders.map((order) => {
+    return order?.products.map< string[] | Product[]>((product: any) => {
+      if (typeof product === 'string') {
+        req.payload.logger.error('Search depth not sufficient to find file ids'); return false
+      }
+
+      return typeof product.product_files === 'string'
+        ? product.product_files
+        : product.product_files.id
+    })
+  }).filter(Boolean)
+    .flat()
+
+  return {
+    id: {
+      in: [...ownProductFilesIds, ...purchasedProductsFileIds]
+    }
+  }
 }
 
 export const ProductFiles: CollectionConfig = {
@@ -34,7 +53,9 @@ export const ProductFiles: CollectionConfig = {
     beforeChange: [addUser]
   },
   access: {
-    read: yourOwnOrPurchased
+    read: yourOwnOrPurchased,
+    update: ({ req }) => req.user.role === 'admin',
+    delete: ({ req }) => req.user.role === 'admin'
   },
   upload: {
     staticURL: '/products_files',
