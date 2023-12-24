@@ -37,7 +37,7 @@ export default function Cart (): JSX.Element {
             </SheetHeader>
             { itemsCount > 0
               ? <>
-                <div className='flex w-full flex-col '>
+
                 <ScrollArea>
                   {items.map(({ product }) => (
                     <CartItem
@@ -47,7 +47,6 @@ export default function Cart (): JSX.Element {
                   ))}
                 </ScrollArea>
 
-                </div>
                 <div className='space-y-4 pr-6'>
                 <Separator />
                 <div className='space-y-1.5 pr-6'>

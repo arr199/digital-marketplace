@@ -12,7 +12,7 @@ export default function AddToCartButton ({ product }: { product: Product }): JSX
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsSuccess(false)
-    }, 2000)
+    }, 1000)
     return () => { clearTimeout(timer) }
   }, [isSuccess])
   return (

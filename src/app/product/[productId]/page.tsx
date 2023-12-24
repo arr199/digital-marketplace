@@ -88,6 +88,7 @@ export default async function Page ({ params: { productId } }: PageProps): Promi
           <div className='mt-4 lg:col-start-2 lg:row-span-2  lg:self-center '>
             <ImageSlider urls={urls}></ImageSlider>
           </div>
+          {/* ADD TO CART BUTTON */}
           <div className='py-4 lg:col-start-1 lg:mt-20'>
             <AddToCartButton product={product}></AddToCartButton>
             <div className='flex justify-center mt-10 '>

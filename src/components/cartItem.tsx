@@ -7,19 +7,19 @@ import Image from 'next/image'
 
 export default function CardItem ({ product }: { product: Product }): JSX.Element {
   const { removeItem } = useCart()
-  const { image } = product?.images?.[0]
+  const image = product?.images?.[0].image.url
 
   const label = API.PRODUCT_CATEGORIES.find((e) => e.value === product.category)?.label
 
   return (
    <div className='w-full h-full space-y-1 flex gap-4 mt-4  '>
           <div className='relative w-20 h-20  aspect-square   '>
-          {typeof image !== 'string' && image.url
+          { image
             ? (<Image
                 className='object-cover'
                 alt='product image'
                 fill
-                src={image.url}>
+                src={image}>
 
                 </Image>)
             : <div className='flex h-full items-center justify-center bg-secondary'>
@@ -30,11 +30,12 @@ export default function CardItem ({ product }: { product: Product }): JSX.Elemen
              </div>
             }
           </div>
-          <div className='w-full flex  '>
+          <div className='w-full flex'>
               <div className='flex flex-col self-start '>
                 <span className='text-sm line-clamp-1 font-semibold capitalize'>{product.name}</span>
                 <span className='line-clamp-1 text-xs'>{label}</span>
                 <div className='mt-4 text-xs text-muted-foreground flex'>
+                 {/* REMOVE BUTTON */}
                   <button
                   onClick={ () => { removeItem(product.id) }}
                   className='flex items-center hover:text-red-500   duration-100'>
@@ -44,7 +45,8 @@ export default function CardItem ({ product }: { product: Product }): JSX.Elemen
                   </button>
               </div>
               </div>
-               <p className='ml-auto'>{formatPrice(product.price)}</p>
+              {/* PRICE */}
+               <p className='ml-auto mr-10'>{formatPrice(product.price)}</p>
           </div>
 
    </div>
