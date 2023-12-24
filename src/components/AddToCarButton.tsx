@@ -1,9 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
+import { useCart } from '@/hooks/useCart'
+import { type Product } from '@/server/payload-types'
+import { cn } from '@/lib/utils'
 
-export default function AddToCartButton (): JSX.Element {
+export default function AddToCartButton ({ product }: { product: Product }): JSX.Element {
   const [isSuccess, setIsSuccess] = useState<boolean>()
+  const { addItem } = useCart()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -13,7 +17,15 @@ export default function AddToCartButton (): JSX.Element {
   }, [isSuccess])
   return (
     <Button
-    onClick={() => { setIsSuccess(true) } }
-    className='w-full'> {isSuccess ? 'Added to Cart' : 'Add to Cart'}</Button>
+    onClick={() => {
+      addItem(product)
+      setIsSuccess(true)
+    } }
+    disabled={isSuccess}
+    className={cn('w-full', {
+      'bg-blue-600 hover:bg-blue-600 ': isSuccess
+    })}>
+    {isSuccess ? 'Added!' : 'Add to Cart'}
+    </Button>
   )
 }

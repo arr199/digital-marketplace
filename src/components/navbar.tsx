@@ -6,7 +6,7 @@ import { buttonVariants } from './ui/button'
 import Cart from './cart'
 import { getServerSideUser } from '@/lib/payload.utils'
 import { cookies } from 'next/headers'
-import UserAccountDropDown from './UserAccountDropDown'
+import UserAccountDropDown from './userAccountDropDown'
 
 export default async function Navbar (): Promise<JSX.Element> {
   const nextCookies = cookies()

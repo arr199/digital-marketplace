@@ -11,6 +11,7 @@ import ImageSlider from './imageSlider'
 interface ProductListingProps {
   product: Product | null
   index: number
+
 }
 
 export default function ProductListing ({ product, index }: ProductListingProps): JSX.Element {
@@ -32,15 +33,14 @@ export default function ProductListing ({ product, index }: ProductListingProps)
   const urls = product?.images?.map(({ image }) => typeof image === 'string' ? image : image.url)
     .filter(Boolean) as string[]
 
-  console.log('urls : ', urls)
-
   if (isVisible && product) {
     return (
         <Link className={cn(
-          'invisible h-full w-full cursor-pointer group/main ', {
+          'invisible h-full w-full  cursor-pointer group/main ', {
             'visible animate-in fade-in-5': isVisible
+
           })}
-        href={`product/${product.id}`}>
+        href={`/product/${product.id}`}>
             <div className='flex flex-col w-full'>
                 <ImageSlider urls={urls} />
                 <h3 className='mt-4 font-medium text-sm text-gray-700'>{product.name}</h3>

@@ -1,4 +1,4 @@
-import AddToCartButton from '@/components/AddToCarButton'
+import AddToCartButton from '@/components/addToCarButton'
 import ImageSlider from '@/components/imageSlider'
 import MaxWidthWrapper from '@/components/maxWidthWrapper'
 import ProductReel from '@/components/productReel'
@@ -56,7 +56,7 @@ export default async function Page ({ params: { productId } }: PageProps): Promi
             </ol>
             <div className='mt-4'>
               {/* NAME */}
-              <h1 className='text-3xl tracking-tight font-bold sm:text-4xl'>
+              <h1 className='text-3xl tracking-tight font-bold sm:text-4xl capitalize'>
                 {product.name}
               </h1>
             </div>
@@ -85,11 +85,11 @@ export default async function Page ({ params: { productId } }: PageProps): Promi
             </section>
           </div>
           {/* IMAGES */}
-          <div className='mt-4 lg:col-start-2 lg:row-start-2  lg:self-center '>
+          <div className='mt-4 lg:col-start-2 lg:row-span-2  lg:self-center '>
             <ImageSlider urls={urls}></ImageSlider>
           </div>
           <div className='py-4 lg:col-start-1 lg:mt-20'>
-            <AddToCartButton></AddToCartButton>
+            <AddToCartButton product={product}></AddToCartButton>
             <div className='flex justify-center mt-10 '>
               <p className='flex text-center  text-muted-foreground text-sm gap-2'><Shield></Shield> 30 Day Return Guarantee</p>
             </div>
