@@ -1,5 +1,14 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { type BeforeChangeHook } from 'payload/dist/globals/config/types'
 import API from '../../lib/API'
 import { type CollectionConfig } from 'payload/types'
+import { type Product } from '@/server/payload-types'
+import { stripe } from '../../lib/stripe'
+
+const addUser: BeforeChangeHook = ({ req, data }) => {
+  const user = req.user
+  return { ...data, user: user.id }
+}
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -7,6 +16,42 @@ export const Products: CollectionConfig = {
     useAsTitle: 'name'
   },
   access: {},
+  hooks: {
+    beforeChange: [
+      addUser as any,
+      // CREATING THE PRODUCT IN STRIPE AND SAVING THE STRIPE ID AND PRICE ID IN OUR PRODUCT COLLECTION
+      async (args) => {
+        if (args.operation === 'create') {
+          const data = args.data as Product
+          const createProduct = await stripe.products.create({
+            name: data.name,
+            default_price_data: {
+              currency: 'USD',
+              unit_amount: Math.round(data.price * 100) // the price of the product must be in cents
+            }
+          })
+          const updatedProduct: Product = {
+            ...data,
+            stripeId: createProduct.id,
+            priceId: createProduct.default_price as string // the string price id from stripe
+          }
+          return updatedProduct
+        } else if (args.operation === 'update') {
+          const data = args.data as Product
+
+          const updateProduct = await stripe.products.update(data.stripeId ?? '', {
+            default_price: data.priceId!
+          })
+          const updatedProduct: Product = {
+            ...data,
+            stripeId: updateProduct.id,
+            priceId: updateProduct.default_price as string
+          }
+          return updatedProduct
+        }
+      }
+    ]
+  },
   fields: [
     // USER
     {

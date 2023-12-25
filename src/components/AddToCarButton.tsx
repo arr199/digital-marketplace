@@ -16,13 +16,14 @@ export default function AddToCartButton ({ product }: { product: Product }): JSX
     return () => { clearTimeout(timer) }
   }, [isSuccess])
   return (
+
     <Button
     onClick={() => {
       addItem(product)
       setIsSuccess(true)
     } }
     disabled={isSuccess}
-    className={cn('w-full', {
+    className={cn('w-full mt-4', {
       'bg-blue-600 hover:bg-blue-600 ': isSuccess
     })}>
     {isSuccess ? 'Added!' : 'Add to Cart'}

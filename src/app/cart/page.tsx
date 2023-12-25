@@ -8,8 +8,10 @@ import API from '@/lib/API'
 import { useEffect, useState } from 'react'
 import { formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Check, X } from 'lucide-react'
+import { Check, Loader2, X } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+import { trpc } from '@/trpc/client'
+import { useRouter } from 'next/navigation'
 
 const BREADCRUMBS = [
   { id: 1, name: 'Home', href: '/' },
@@ -17,20 +19,27 @@ const BREADCRUMBS = [
 
 ]
 
-export default function Cart (): JSX.Element {
+export default function Page (): JSX.Element {
   const { items, removeItem } = useCart()
   const [isMounted, setIsMounted] = useState(false)
+  const router = useRouter()
+
+  const { mutate, isLoading } = trpc.payment.createSession.useMutation({
+    onSuccess: ({ url }) => {
+      if (url) router.push(url)
+    }
+  })
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
   if (!isMounted) return <></>
+  const productIds = items.map((prod) => prod.product.id)
+  const cartTotal = items.reduce((acc, curr) => acc + curr.product.price, 0)
+  const fee = 1
 
-  else {
-    const cartTotal = items.reduce((acc, curr) => acc + curr.product.price, 0)
-    const fee = 1
-    return (
+  return (
   <MaxWidthWrapper >
     <div className='mt-10'>
         <h1 className='text-3xl font-bold'>Shoping Cart</h1>
@@ -96,7 +105,7 @@ export default function Cart (): JSX.Element {
               )
             })}
              {/* CHECKOUT */}
-             <section className=' bg-zinc-50 rounded-xl p-5 lg:col-start-2 lg:row-start-1 '>
+             <section className=' bg-zinc-50 rounded-xl p-5 lg:col-start-2 lg:row-start-1  relative'>
              {/* PRICE */}
                 <div className='flex flex-col gap-2'>
                     <h1 className='font-semibold '>Order summary</h1>
@@ -112,13 +121,18 @@ export default function Cart (): JSX.Element {
                     <Separator className='my-2'></Separator>
                     <div className='flex justify-between'>
                         <p className='text-sm font-bold'>Order Total</p>
-                        <p className='font-bold'>{formatPrice(cartTotal)}</p>
+                        <p className='font-bold'>{formatPrice(cartTotal + fee)}</p>
                     </div>
                 </div>
+                <Button
+                disabled={items.length <= 0 || isLoading}
+                onClick={() => { mutate({ productIds }) }}
+                className=' left-0 absolute w-full mt-8 selection:items-center'>Checkout
+                  {isLoading ? <Loader2 className='animate-spin ml-4'></Loader2> : null}
+                </Button>
             </section>
           </ul> }
           </div>
   </MaxWidthWrapper>
-    )
-  }
+  )
 }

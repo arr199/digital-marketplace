@@ -14,7 +14,7 @@ const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) =>
 
 export type ExpressContext = inferAsyncReturnType<typeof createContext>
 
-async function start (): Promise<any> {
+async function start (): Promise<void> {
   const payload = await getPayloadClient({
     initOptions: {
       express: app,
