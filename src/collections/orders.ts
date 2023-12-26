@@ -13,11 +13,14 @@ const yourOwn: Access = ({ req: { user } }) => {
 export const Orders: CollectionConfig = {
   slug: 'orders',
   admin: {
-    useAsTitle: 'Your orders'
+    useAsTitle: 'Your orders',
     description: 'A summary of all your orders on DigitalHippo'
   },
   access: {
-    read: yourOwn
+    read: yourOwn,
+    update: ({ req }) => req.user.role === 'admin',
+    delete: ({ req }) => req.user.role === 'admin',
+    create: ({ req }) => req.user.role === 'admin'
   },
   fields: [
     {
