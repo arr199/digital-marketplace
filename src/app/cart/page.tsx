@@ -12,6 +12,7 @@ import { Check, Loader2, X } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { trpc } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 const BREADCRUMBS = [
   { id: 1, name: 'Home', href: '/' },
@@ -27,6 +28,10 @@ export default function Page (): JSX.Element {
   const { mutate, isLoading } = trpc.payment.createSession.useMutation({
     onSuccess: ({ url }) => {
       if (url) router.push(url)
+    },
+    onError: () => {
+      toast.error('You must login first!', { position: 'top-right' })
+      router.push('/sign-in?origin=cart')
     }
   })
 
@@ -71,7 +76,7 @@ export default function Page (): JSX.Element {
           : <ul className=' mt-4  grid lg:grid-cols-2 grid-cols-1 gap-x-10 gap-y-4 pb-20'>
             {items?.map(({ product }) => {
               const label = API.PRODUCT_CATEGORIES.find(({ value }) => value === product.category)?.label
-              const imageUrl = product?.images?.[0]?.image?.url
+              const imageUrl = product?.images?.[0]?.image.url
               return (
                 <li className='flex border-dashed col-start-1  rounded-xl border-zinc-200 border-2 p-4 relative '
                 key={product.id}>
@@ -124,6 +129,7 @@ export default function Page (): JSX.Element {
                         <p className='font-bold'>{formatPrice(cartTotal + fee)}</p>
                     </div>
                 </div>
+                {/* CHECKOUT BUTTON */}
                 <Button
                 disabled={items.length <= 0 || isLoading}
                 onClick={() => { mutate({ productIds }) }}

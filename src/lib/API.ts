@@ -42,7 +42,8 @@ const API = {
         }
       ]
     }
-  ]
+  ],
+  TRANSACTION_FEE: 1
 }
 
 export default API
