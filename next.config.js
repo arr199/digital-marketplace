@@ -7,7 +7,14 @@ const nextConfig = {
                 pathname : "**" ,
                 port : "3400" ,
                 protocol : "http",
-            }
+            },
+            {
+            hostname : "digital-marketplace-production-ae5b.up.railway.app/",
+            pathname : "**" ,
+            port : "3400" ,
+            protocol : "https",
+        }
+
         ]
     }
 }
