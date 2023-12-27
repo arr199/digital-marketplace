@@ -1,21 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+
     images : {
         remotePatterns : [
             {
                 hostname : "digital-marketplace-production-ae5b.up.railway.app",
-                pathname : "**" ,
-                port : "3400" ,
-                protocol : "http",
+                pathname : "/**" ,
+                port : "" ,
+                protocol : "https",
             },
-            {
-            hostname : "digital-marketplace-production-ae5b.up.railway.app",
-            pathname : "**" ,
-            port : "3400" ,
-            protocol : "https",
-        }
+          
 
         ]
+        
     }
 }
 
