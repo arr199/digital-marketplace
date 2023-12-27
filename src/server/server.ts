@@ -5,6 +5,11 @@ import { nextApp, nextHandler } from './next-utils'
 import * as trpcExpress from '@trpc/server/adapters/express'
 import { appRouter } from '../trpc'
 import { type inferAsyncReturnType } from '@trpc/server'
+import bodyParser from 'body-parser'
+import { type IncomingMessage } from 'http'
+import { stripeWebHookHandler } from '../webhooks/stripeWebHook'
+import nextBuild from 'next/dist/build'
+import path from 'path'
 
 const app = express()
 const PORT = Number(process.env.PORT) ?? 3400
@@ -13,8 +18,15 @@ const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) =>
 })
 
 export type ExpressContext = inferAsyncReturnType<typeof createContext>
+export type WebHookRequest = IncomingMessage & { rawBody: Buffer }
 
 async function start (): Promise<void> {
+  const webHookMiddleWare = bodyParser.json({
+    verify: (req: WebHookRequest, _, buffer) => {
+      req.rawBody = buffer
+    }
+  })
+
   const payload = await getPayloadClient({
     initOptions: {
       express: app,
@@ -24,13 +36,25 @@ async function start (): Promise<void> {
     }
   })
 
+  app.post('/api/webhooks/stripe', webHookMiddleWare, stripeWebHookHandler)
+
+  if (process.env.NEXT_BUILD) {
+    app.listen(3200, async () => {
+      payload.logger.info('NextJS is building for production')
+      // @ts-expect-error  ???
+      await nextBuild(path.join(__dirname, '../'))
+    })
+  }
+
+  // TRPC ENDPOINT
   app.use('/api/trpc', trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext
-
   }))
+  // SELF HOSTING NEXTJS APP IN EXPRESS
   app.use(async (req, res) => { await nextHandler(req, res) })
 
+  // STARTING NEXT APP
   nextApp.prepare().then(() => {
     payload.logger.info('Next.js started')
 
