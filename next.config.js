@@ -9,7 +9,7 @@ const nextConfig = {
                 protocol : "http",
             },
             {
-            hostname : "digital-marketplace-production-ae5b.up.railway.app/",
+            hostname : "digital-marketplace-production-ae5b.up.railway.app",
             pathname : "**" ,
             port : "3400" ,
             protocol : "https",
