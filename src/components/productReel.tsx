@@ -1,8 +1,8 @@
 'use client'
 
-import { type TQueryValidatorSchema } from '@/lib/zod-schemas'
-import { type Product } from '@/server/payload-types'
-import { trpc } from '@/trpc/client'
+import { type TQueryValidatorSchema } from '../lib/zod-schemas'
+import { type Product } from '../server/payload-types'
+import { trpc } from '../trpc/client'
 import Link from 'next/link'
 import ProductListing from './productListing'
 

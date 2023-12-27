@@ -1,11 +1,10 @@
 'use client'
-
-import { type Product } from '@/server/payload-types'
+import { type Product } from '../server/payload-types'
 import { useEffect, useState } from 'react'
 import { Skeleton } from './ui/skeleton'
 import Link from 'next/link'
-import { cn, formatPrice } from '@/lib/utils'
-import API from '@/lib/API'
+import { cn, formatPrice } from '../lib/utils'
+import API from '../lib/API'
 import ImageSlider from './imageSlider'
 
 interface ProductListingProps {
