@@ -89,8 +89,7 @@ export default async function Page ({ params: { productId } }: PageProps): Promi
             <ImageSlider urls={urls}></ImageSlider>
           </div>
           {/* ADD TO CART BUTTON */}
-          <div classNa
-          me='py-4 lg:col-start-1 lg:mt-20'>
+          <div className='py-4 lg:col-start-1 lg:mt-20'>
             <AddToCartButton product={product}></AddToCartButton>
             <div className='flex justify-center mt-10 '>
               <p className='flex text-center  text-muted-foreground text-sm gap-2'><Shield></Shield> 30 Day Return Guarantee</p>

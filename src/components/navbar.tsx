@@ -25,7 +25,7 @@ export default async function Navbar (): Promise<JSX.Element> {
             <NavItems></NavItems>
           </div>
           <div className='ml-auto flex items-center '>
-            <div className='flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6'>
+            <div className='flex  lg:flex-1 items-center lg:justify-end lg:space-x-6 space-x-1'>
               {user
                 ? null
                 : <Link
