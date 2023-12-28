@@ -9,10 +9,13 @@ const nextConfig = {
                 port : "" ,
                 protocol : "https",
             },
-          
-
+            {
+                hostname : "localhost",
+                pathname : "**" ,
+                port : "3400" ,
+                protocol : "http",
+            },
         ]
-        
     }
 }
 
