@@ -8,7 +8,6 @@ interface PageProps {
 export default function Page ({ searchParams }: PageProps): JSX.Element {
   const token = searchParams.token
   const toEmail = searchParams.to
-  console.log(token)
   return (
    <div className='container flex flex-col pt-20 items-center justify-center lg:px-0'>
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">

@@ -16,7 +16,6 @@ interface PageProps {
 }
 
 export default async function Thankyou ({ searchParams }: PageProps): Promise<JSX.Element> {
-  console.log(searchParams.orderId)
   const nextCookies = cookies()
   const { user } = await getServerSideUser(nextCookies)
   const { docs: orders } = await payload.find({
@@ -29,6 +28,7 @@ export default async function Thankyou ({ searchParams }: PageProps): Promise<JS
 
   if (!order) return notFound()
   const orderUserId = typeof order.user === 'string' ? order.user : order.user.id
+
   if (orderUserId !== user?.id) {
     return redirect(`/sign-in?origin=thank-you?&orderId=${order.id}`)
   }
@@ -73,6 +73,7 @@ export default async function Thankyou ({ searchParams }: PageProps): Promise<JS
                 <span className='text-sm font-semibold' >{product.name}</span>
                 <span className='text-muted-foreground text-sm my-1 font-semibold'>Category: {label}</span>
                 <div className='flex flex-col justify-end h-full '>
+                 {/* DOWNLOAD LINK */}
                   {order.isPaid
                     ? <a
                       className='text-blue-500 mb-4 font-semibold text-sm hover:underline underline-offset-2 '

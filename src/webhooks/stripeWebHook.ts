@@ -11,9 +11,11 @@ export async function stripeWebHookHandler (
   req: express.Request,
   res: express.Response
 ): Promise<express.Response> {
+  console.log('REQUEST TO THIS ENDPOINT', req.path)
   const webhookRequest = req as any as WebHookRequest
   const body = webhookRequest.rawBody
   const signature = req.headers['stripe-signature'] ?? ''
+  console.log('THIS IS THE SIGNATURE', signature)
 
   let event
   try {
