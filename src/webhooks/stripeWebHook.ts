@@ -17,6 +17,7 @@ export async function stripeWebHookHandler (
   const signature = req.headers['stripe-signature'] ?? ''
   console.log('THIS IS THE SIGNATURE', signature)
 
+  console.log('STRIPE SECRET : ', process.env.STRIPE_WEBHOOK_SECRET)
   let event
   try {
     event = stripe.webhooks.constructEvent(
@@ -37,7 +38,7 @@ export async function stripeWebHookHandler (
   if (!session?.metadata?.userId || !session?.metadata?.orderId) {
     return res.status(400).send('Webhook Error: No user present in metadata')
   }
-
+  console.log('EVENT-TYPE')
   if (event.type === 'checkout.session.completed') {
     const payload = await getPayloadClient({})
 
@@ -51,7 +52,7 @@ export async function stripeWebHookHandler (
     })
 
     const [user] = users
-
+    console.log('USER DOESNT EXIST')
     if (!user) return res.status(404).json({ error: 'No such user exists.' })
 
     const { docs: orders } = await payload.find({
@@ -65,9 +66,9 @@ export async function stripeWebHookHandler (
     })
 
     const [order] = orders
-
+    console.log('ORDER DOESNT EXIST')
     if (!order) return res.status(404).json({ error: 'No such order exists.' })
-
+    console.log('UPDATE ORDER')
     await payload.update({
       collection: 'orders',
       data: {

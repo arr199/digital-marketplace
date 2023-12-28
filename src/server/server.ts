@@ -5,7 +5,7 @@ import { nextApp, nextHandler } from './next-utils'
 import * as trpcExpress from '@trpc/server/adapters/express'
 import { appRouter } from '../trpc'
 import { type inferAsyncReturnType } from '@trpc/server'
-// import bodyParser from 'body-parser'
+import bodyParser from 'body-parser'
 import { type IncomingMessage } from 'http'
 import { stripeWebHookHandler } from '../webhooks/stripeWebHook'
 import nextBuild from 'next/dist/build'
@@ -21,11 +21,12 @@ export type ExpressContext = inferAsyncReturnType<typeof createContext>
 export type WebHookRequest = IncomingMessage & { rawBody: Buffer }
 
 async function start (): Promise<void> {
-  // const webHookMiddleWare = bodyParser.json({
-  //   verify: (req: WebHookRequest, _, buffer) => {
-  //     req.rawBody = buffer
-  //   }
-  // })
+  const webHookMiddleWare = bodyParser.json({
+    verify: (req: WebHookRequest, _, buffer) => {
+      req.rawBody = buffer
+    }
+  })
+  app.post('/api/webhooks/stripe', webHookMiddleWare, stripeWebHookHandler)
 
   const payload = await getPayloadClient({
     initOptions: {
@@ -36,10 +37,8 @@ async function start (): Promise<void> {
     }
   })
 
-  app.post('/api/webhooks/stripe', stripeWebHookHandler)
-
   if (process.env.NEXT_BUILD) {
-    app.listen(3200, async () => {
+    app.listen(PORT, async () => {
       payload.logger.info('NextJS is building for production')
       // @ts-expect-error  ???
       await nextBuild(path.join(__dirname, '../'))
