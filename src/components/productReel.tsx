@@ -39,7 +39,7 @@ export default function ProductReel ({ title, subtitle, href, query }: ProductRe
         </div>
         { href
           ? <Link
-                className='hidden text-sm font-medium text-blue-500 hover:text-blue-400 md:block'
+                className='hidden text-sm font-medium text-blue-500 hover:text-blue-400 md:block hover:underline'
                 href={href}>Shop the collection &rarr; {' '}</Link>
           : null}
     </div>

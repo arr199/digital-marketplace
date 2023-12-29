@@ -33,6 +33,7 @@ export const authRouter = router({
     .query(async ({ input }) => {
       const { token } = input
       const payload = await getPayloadClient({})
+      // VERIFIED THE USER EMAIL WITH THE TOKEN SENT BY PAYLOAD
       const isVerified = await payload.verifyEmail({
         collection: 'users',
         token

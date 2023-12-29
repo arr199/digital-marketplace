@@ -64,7 +64,6 @@ export async function stripeWebHookHandler (
     const [order] = orders
 
     if (!order) return res.status(404).json({ error: 'No such order exists.' })
-    console.log('UPDATE ORDER')
     await payload.update({
       collection: 'orders',
       data: {

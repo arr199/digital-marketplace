@@ -45,7 +45,6 @@ export default function NavItem ({ category, isAnyOpen, handleOpen, isOpen }: Na
                   className='absolute inset-0 top-1/2  bg-white shadow '
                   aria-hidden="true"
                 />
-
                   <div className='relative  bg-white '>
                     <div className='mx-auto max-w-7xl px-8  h-[50vh]'>
                       <div className='grid grid-cols-4 gap-x-8 gap-y-10 py-16 '>
@@ -54,7 +53,7 @@ export default function NavItem ({ category, isAnyOpen, handleOpen, isOpen }: Na
                                 <div
                                 className='group relative  text-base sm-text-sm'
                                 key={item.name}>
-                                    <div className='p-4 relative aspect-video overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75'>
+                                    <div className='p-4 relative aspect-video overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75 shadow-sm'>
                                         <Image
                                         alt='products category image'
                                         src={item.imageSrc}
@@ -64,17 +63,18 @@ export default function NavItem ({ category, isAnyOpen, handleOpen, isOpen }: Na
                                         </Image>
 
                                     </div>
-                                   <Link
-                                      className='mt-6 block font-medium text-gray-900'
-                                      href={item.href}>
-                                      {item.name}
-                                   </Link>
-                                   <p
-                                    className='mt-1'
-                                    aria-hidden="true" >
-                                    Shop Now
-                                   </p>
-
+                                   <div className='flex flex-col text-sm'>
+                                      <Link
+                                          className='mt-6 block font-medium text-gray-900 '
+                                          href={item.href}>
+                                          {item.name}
+                                      </Link>
+                                      <p
+                                        className='mt-1'
+                                        aria-hidden="true" >
+                                        Shop Now
+                                      </p>
+                                   </div>
                                 </div>
                               ))}
                           </div>

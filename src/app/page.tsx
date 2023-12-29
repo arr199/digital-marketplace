@@ -42,7 +42,7 @@ export default function Home (): JSX.Element {
         <Button variant={'ghost'}> Our quality promise &rarr; </Button>
         </div>
       </div>
-    <ProductReel query={{ sort: 'desc', limit: 4 }} title='Brand New' subtitle='' href='12'></ProductReel>
+    <ProductReel query={{ sort: 'desc', limit: 4 }} title='Brand New' subtitle='' href='/products?sort=recent'></ProductReel>
     </MaxWidthWrapper>
     <section className='border-t border-gray-200 bg-gray-50'>
       <MaxWidthWrapper className='py-20'>
