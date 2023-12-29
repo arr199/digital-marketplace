@@ -5,7 +5,7 @@ import type express from 'express'
 import stripe from 'stripe'
 import type Stripe from 'stripe'
 import nodemailer from 'nodemailer'
-import { receiptEmailHtml } from '../components/emails/receiptEmail'
+import { ReceiptEmailHtml } from '../components/emails/receiptEmail'
 
 export async function stripeWebHookHandler (
   req: express.Request,
@@ -90,8 +90,8 @@ export async function stripeWebHookHandler (
       const data = await transporter.sendMail({
         from: process.env.GMAIL_SERVER_USER, // sender address
         to: user.email, // list of receivers
-        text: 'Hello world?', // plain text body
-        html: receiptEmailHtml({
+        text: 'Receipt', // plain text body
+        html: ReceiptEmailHtml({
           date: new Date(),
           email: user.email,
           orderId: session.metadata.orderId,

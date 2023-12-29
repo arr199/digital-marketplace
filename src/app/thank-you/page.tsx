@@ -51,7 +51,7 @@ export default async function Thankyou ({ searchParams }: PageProps): Promise<JS
         <img className='bottom-0 sm:top-0 right-0 sm:h-40 sm:w-40 w-20 h-20 absolute' src="/hippo-email-sent.png" alt="" />
       </div>
 
-      <ul className='border-t mt-4 sm:mt-10 py-4 '>
+      <ul className='border-t mt-4 sm:mt-10 py-4  flex flex-col gap-4'>
         {(order.products as Product[]).map((product) => {
           const { image } = product.images?.[0] as any
           const { url } = product.product_files as ProductFile
@@ -60,7 +60,7 @@ export default async function Thankyou ({ searchParams }: PageProps): Promise<JS
           return (
             <li key={product.id} className='flex  gap-4'>
               {/* PRODUCT IMAGE */}
-              <div className='relative w-40 h-40 flex object-cover aspect-square shadow-md'>
+              <div className='relative w-40 h-30 flex object-cover aspect-square shadow-md'>
                 <Image
                   alt={`${product.name} image`}
                   fill
@@ -93,7 +93,7 @@ export default async function Thankyou ({ searchParams }: PageProps): Promise<JS
         })}
       </ul>
      {/* ORDER SUMMARY */}
-      <div className='h-40 flex flex-col border-t  py-4 gap-4 text-muted-foreground text-sm font-medium'>
+      <div className=' flex flex-col border-t  py-4 gap-4 text-muted-foreground text-sm font-medium'>
         <div className='flex justify-between '>
           <p className=''>Subtotal</p>
           <p className='font-semibold text-gray-900'>{formatPrice(totalPrice)}</p>
