@@ -22,7 +22,6 @@ export default function RootLayout ({
   children: React.ReactNode
 }): JSX.Element {
   return (
-
       <html lang="en" className='h-full'>
         <Providers>
           <body className={cn('relative h-full font-sans antialiased flex flex-col', inter.className)}>
@@ -34,8 +33,6 @@ export default function RootLayout ({
             <Footer></Footer>
           </body>
         </Providers>
-
       </html>
-
   )
 }
