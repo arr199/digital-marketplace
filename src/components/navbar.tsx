@@ -7,6 +7,7 @@ import Cart from './cart'
 import { getServerSideUser } from '@/lib/payload.utils'
 import { cookies } from 'next/headers'
 import UserAccountDropDown from './userAccountDropDown'
+import MobileNavbar from './mobileNavbar'
 
 export default async function Navbar (): Promise<JSX.Element> {
   const nextCookies = cookies()
@@ -17,7 +18,9 @@ export default async function Navbar (): Promise<JSX.Element> {
       <header className='relative ' >
         <MaxWidthWrapper className='border-b border-gray-200 flex gap-4 py-2'>
           {/* TODO Movil Nav */}
-          <div></div>
+          <div className='lg:hidden'>
+           <MobileNavbar user={user}/>
+          </div>
           <Link href="/" className='ml-4 flex lg:ml-0'>
             {<Icons.logo className="h-10 w-10" ></Icons.logo>}
           </Link>
@@ -25,7 +28,7 @@ export default async function Navbar (): Promise<JSX.Element> {
             <NavItems></NavItems>
           </div>
           <div className='ml-auto flex items-center '>
-            <div className='flex  lg:flex-1 items-center lg:justify-end lg:space-x-6 space-x-1'>
+            <div className='hidden lg:flex lg:flex-1 items-center lg:justify-end lg:space-x-6 space-x-1'>
               {user
                 ? null
                 : <Link
@@ -62,9 +65,10 @@ export default async function Navbar (): Promise<JSX.Element> {
 
                       </span>
                    </div> }
-              <div className='ml-4 flow-root lg:ml-6'>
+
+            </div>
+            <div className='ml-4 flow-root lg:ml-6'>
                 <Cart></Cart>
-              </div>
             </div>
           </div>
         </MaxWidthWrapper>

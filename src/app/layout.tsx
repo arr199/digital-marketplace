@@ -24,15 +24,14 @@ export default function RootLayout ({
 
       <html lang="en" className='h-full'>
         <Providers>
-          <body className={cn('relative h-full font-sans antialiased', inter.className)}>
-          <Navbar></Navbar>
-          <div className='flex-grow flex-1'>
-            {children}
-          </div>
-          <Toaster richColors/>
-          <Footer></Footer>
+          <body className={cn('relative h-full font-sans antialiased flex flex-col', inter.className)}>
+            <Navbar></Navbar>
+            <main className='flex-grow flex-1'>
+              {children}
+            </main>
+            <Toaster richColors/>
+            <Footer></Footer>
           </body>
-
         </Providers>
 
       </html>
