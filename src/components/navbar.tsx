@@ -15,7 +15,7 @@ export default async function Navbar (): Promise<JSX.Element> {
   return (
     <div className="sticky z-50 top-0 h-16  bg-white">
       <header className='relative ' >
-        <MaxWidthWrapper className='border-b border-gray-200 flex gap-4 '>
+        <MaxWidthWrapper className='border-b border-gray-200 flex gap-4 py-2'>
           {/* TODO Movil Nav */}
           <div></div>
           <Link href="/" className='ml-4 flex lg:ml-0'>

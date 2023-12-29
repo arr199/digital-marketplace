@@ -76,7 +76,7 @@ export default function Page (): JSX.Element {
           : <ul className=' mt-4  grid lg:grid-cols-2 grid-cols-1 gap-x-10 gap-y-4 pb-20'>
             {items?.map(({ product }) => {
               const label = API.PRODUCT_CATEGORIES.find(({ value }) => value === product.category)?.label
-              const imageUrl = product?.images?.[0]?.image.url
+              const imageUrl = (product?.images as any[])?.[0]?.image.url
               return (
                 <li className='flex border-dashed col-start-1  rounded-xl border-zinc-200 border-2 p-4 relative '
                 key={product.id}>
@@ -100,11 +100,11 @@ export default function Page (): JSX.Element {
                         src={'/hippo-empty-cart.png'}/>
                     {/* REMOVE PRODUCT BUTTON */}
                     <Button
-                    onClick={ () => { removeItem(product.id) }}
-                    variant={'ghost'}
-                    className="absolute top-2 right-2"
-                    aria-label='remove products'>
-                        <X aria-hidden="true"></X>
+                      onClick={ () => { removeItem(product.id) }}
+                      variant={'ghost'}
+                      className="absolute top-2 right-2"
+                      aria-label='remove products'>
+                          <X aria-hidden="true"></X>
                     </Button>
                 </li>
               )

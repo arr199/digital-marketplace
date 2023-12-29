@@ -6,17 +6,17 @@ const API = {
       featured: [
         {
           name: 'Editor picks',
-          href: '#',
+          href: '/products?category=ui_kits',
           imageSrc: '/nav/ui-kits/mixed.jpg'
         },
         {
           name: 'New Arrivals',
-          href: '#',
+          href: '/products?category=ui_kits',
           imageSrc: '/nav/ui-kits/blue.jpg'
         },
         {
           name: 'Bestsellers',
-          href: '#',
+          href: '/products?category=ui_kits',
           imageSrc: '/nav/ui-kits/purple.jpg'
         }
       ]
@@ -27,17 +27,17 @@ const API = {
       featured: [
         {
           name: 'Favorite Icons Picks',
-          href: '#',
+          href: '/products?category=icons',
           imageSrc: '/nav/icons/picks.jpg'
         },
         {
           name: 'New Arrivals',
-          href: '#',
+          href: '/products?category=icons',
           imageSrc: '/nav/icons/new.jpg'
         },
         {
           name: 'Bestsellers',
-          href: '#',
+          href: '/products?category=icons',
           imageSrc: '/nav/icons/bestsellers.jpg'
         }
       ]

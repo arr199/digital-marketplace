@@ -35,7 +35,7 @@ export default function ImageSlider ({ urls }: ImageSliderProps): JSX.Element {
   const inactiveStyles = 'hidden text-gray-400'
 
   return (
-   <div className='group relative bg-zinc-100 aspect-square overflow-hidden rounded-xl shadow-md '>
+   <div className='group relative bg-zinc-100 aspect-square overflow-hidden rounded-xl shadow-md  hover:scale-105 transition-scale duration-300 '>
         <div className=" z-10 inset-0 opacity-0 group-hover:opacity-100 transition ">
             <button
               onClick={(e) => {

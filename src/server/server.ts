@@ -5,11 +5,13 @@ import { nextApp, nextHandler } from './next-utils'
 import * as trpcExpress from '@trpc/server/adapters/express'
 import { appRouter } from '../trpc'
 import { type inferAsyncReturnType } from '@trpc/server'
-import bodyParser from 'body-parser'
 import { type IncomingMessage } from 'http'
 import { stripeWebHookHandler } from '../webhooks/stripeWebHook'
 import nextBuild from 'next/dist/build'
 import path from 'path'
+import { type PayloadRequest } from 'payload/types'
+
+import { parse } from 'url' // eslint-disable-line n/no-deprecated-api
 
 const app = express()
 const PORT = Number(process.env.PORT) ?? 3400
@@ -21,11 +23,8 @@ export type ExpressContext = inferAsyncReturnType<typeof createContext>
 export type WebHookRequest = IncomingMessage & { rawBody: Buffer }
 
 async function start (): Promise<void> {
-  const webHookMiddleWare = bodyParser.json({
-    verify: (req: WebHookRequest, _, buffer) => {
-      req.rawBody = buffer
-    }
-  })
+  // ENDPOINT TO RECEIVE STRIPE REQUEST
+  app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), stripeWebHookHandler)
 
   const payload = await getPayloadClient({
     initOptions: {
@@ -36,10 +35,23 @@ async function start (): Promise<void> {
     }
   })
 
-  app.post('/api/webhooks/stripe', webHookMiddleWare, stripeWebHookHandler)
+  const cartRouter = express.Router()
+  cartRouter.use(payload.authenticate)
+
+  cartRouter.get('/', async (req, res) => {
+    const request = req as PayloadRequest
+    if (!request.user) {
+      console.log('NO USER')
+      res.redirect('/sign-in?origin=cart')
+    }
+    const parseUrl = parse(req.url, true)
+    await nextApp.render(req, res, '/cart', parseUrl?.query)
+  })
+
+  app.use('/cart', cartRouter)
 
   if (process.env.NEXT_BUILD) {
-    app.listen(3200, async () => {
+    app.listen(PORT, async () => {
       payload.logger.info('NextJS is building for production')
       // @ts-expect-error  ???
       await nextBuild(path.join(__dirname, '../'))

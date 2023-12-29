@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { type BeforeChangeHook } from 'payload/dist/globals/config/types'
+import { type AfterChangeHook, type BeforeChangeHook } from 'payload/dist/globals/config/types'
 import API from '../../lib/API'
-import { type CollectionConfig } from 'payload/types'
+import { type Access, type CollectionConfig } from 'payload/types'
 import { type Product } from '@/server/payload-types'
 import { stripe } from '../../lib/stripe'
 
@@ -9,14 +10,47 @@ const addUser: BeforeChangeHook = ({ req, data }) => {
   const user = req.user
   return { ...data, user: user.id }
 }
+const adminOrOwner: Access = ({ req }) => {
+  if (req.user.role === 'admin') return true
+
+  return {
+    user: {
+      equals: req.user.id
+    }
+  }
+}
+
+const addProductIdToUserCollection: AfterChangeHook = async ({ req, doc }) => {
+  const fullUser = await req.payload.findByID({
+    collection: 'users',
+    id: req.user.id
+  })
+
+  if (fullUser && typeof fullUser === 'object') {
+    const { products } = fullUser
+    const allIds = [...(products?.map(prod => typeof prod === 'object' ? prod.id : prod)) ?? []]
+    const dataToUpdate = [...allIds, doc.id]
+
+    await req.payload.update({
+      collection: 'users',
+      id: fullUser.id,
+      data: { products: dataToUpdate }
+    })
+  }
+}
 
 export const Products: CollectionConfig = {
   slug: 'products',
   admin: {
     useAsTitle: 'name'
   },
-  access: {},
+  access: {
+    read: adminOrOwner,
+    update: adminOrOwner,
+    delete: adminOrOwner
+  },
   hooks: {
+    afterChange: [addProductIdToUserCollection as any],
     beforeChange: [
       addUser as any,
       // CREATING THE PRODUCT IN STRIPE AND SAVING THE STRIPE ID AND PRICE ID IN OUR PRODUCT COLLECTION

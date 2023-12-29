@@ -1,6 +1,6 @@
 import { getPayloadClient } from '../server/get-payload'
 import { type Product } from '../server/payload-types'
-import { type WebHookRequest } from '../server/server'
+
 import type express from 'express'
 import stripe from 'stripe'
 import type Stripe from 'stripe'
@@ -11,8 +11,7 @@ export async function stripeWebHookHandler (
   req: express.Request,
   res: express.Response
 ): Promise<express.Response> {
-  const webhookRequest = req as any as WebHookRequest
-  const body = webhookRequest.rawBody
+  const body = req.body as Buffer
   const signature = req.headers['stripe-signature'] ?? ''
 
   let event
@@ -65,7 +64,6 @@ export async function stripeWebHookHandler (
     const [order] = orders
 
     if (!order) return res.status(404).json({ error: 'No such order exists.' })
-
     await payload.update({
       collection: 'orders',
       data: {

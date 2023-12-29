@@ -19,20 +19,21 @@ export default function Page (): JSX.Element {
   const searchParams = useSearchParams()
   const isSeller = searchParams.get('as') === 'seller'
   const origin = searchParams.get('origin')
-
+  console.log(origin)
   const { mutate: signIn, isLoading } = trpc.auth.loginUser.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Signed in successfully')
-      router.refresh()
 
       if (origin) {
         router.push(`/${origin}`)
         return
       }
+
       if (isSeller) {
         router.push('/sell')
         return
       }
+
       router.push('/')
       router.refresh()
     },

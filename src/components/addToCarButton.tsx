@@ -4,10 +4,11 @@ import { Button } from './ui/button'
 import { useCart } from '@/hooks/useCart'
 import { type Product } from '@/server/payload-types'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 export default function AddToCartButton ({ product }: { product: Product }): JSX.Element {
   const [isSuccess, setIsSuccess] = useState<boolean>()
-  const { addItem } = useCart()
+  const { addItem, items } = useCart()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -19,6 +20,11 @@ export default function AddToCartButton ({ product }: { product: Product }): JSX
 
     <Button
     onClick={() => {
+      if (items.some(item => item.product.id === product.id)) {
+        toast.error('Product Already in the cart', { position: 'top-right' })
+        setIsSuccess(true)
+        return
+      }
       addItem(product)
       setIsSuccess(true)
     } }
