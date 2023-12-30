@@ -6,7 +6,7 @@ Your marketplace for digital assets.
 
 ### 🌐 Website : https://digital-marketplace.up.railway.app/  ###
 
-## Features
+## Features 💡
 
 - Users can log in with credentials and ensure the security of their data.
 - Secure payment using services like Stripe.
@@ -14,7 +14,7 @@ Your marketplace for digital assets.
 - Enjoy a responsive design for various device screen sizes.
 - Admins can review products to ensure their integrity before the release.
   
-## Built with
+## Built with ⚒️
 
 - [NextJS](https://nextjs.org/) - The React Framework for the Web.
 - [React](https://react.dev/) - A JavaScript library that allows you to create user interfaces.
