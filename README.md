@@ -2,7 +2,7 @@
 
 Your marketplace for digital assets.
 
-<img width="50%" src="./public/kanban.png" />
+<img width="50%" src="./public/digital-marketplace.webp" />
 
 ### 🌐 Website : https://digital-marketplace.up.railway.app/  ###
 
