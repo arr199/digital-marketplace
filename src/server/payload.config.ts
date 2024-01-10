@@ -18,6 +18,7 @@ export default buildConfig({
   admin: {
     bundler: webpackBundler(),
     user: 'users',
+
     meta: {
       titleSuffix: '- DigitalHippo',
       favicon: '/favicon.ico',

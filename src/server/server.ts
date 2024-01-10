@@ -23,6 +23,13 @@ export type ExpressContext = inferAsyncReturnType<typeof createContext>
 export type WebHookRequest = IncomingMessage & { rawBody: Buffer }
 
 async function start (): Promise<void> {
+  // app.get('/sell', function (req, res, next) {
+  //   res.writeHead(200, {
+  //     'Content-Type': 'text/plain',
+  //     'Transfer-Encoding': 'chunked'
+  //   })
+  //   console.log('ASDASDASDASD')
+  // })
   // ENDPOINT TO RECEIVE STRIPE REQUEST
   app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), stripeWebHookHandler)
 
