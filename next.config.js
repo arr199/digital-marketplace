@@ -37,6 +37,18 @@ const nextConfig = {
         port: "",
         protocol: "https",
       },
+      {
+        hostname: "188.245.190.65",
+        pathname: "**",
+        port: "3400",
+        protocol: "https",
+      },
+      {
+        hostname: "188.245.190.65",
+        pathname: "**",
+        port: "3400",
+        protocol: "http",
+      },
     ],
   },
 };
