@@ -20,8 +20,14 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "digital-marketplace.up.railway.app",
-        pathname: "/**",
+        hostname: "digital.marketplace.abielrodriguez.dev",
+        pathname: "**",
+        port: "",
+        protocol: "https",
+      },
+      {
+        hostname: "www.digital.marketplace.abielrodriguez.dev",
+        pathname: "**",
         port: "",
         protocol: "https",
       },
@@ -31,12 +37,7 @@ const nextConfig = {
         port: "3400",
         protocol: "http",
       },
-      {
-        hostname: "digital-marketplace-ghencuyfzq-nw.a.run.app",
-        pathname: "**",
-        port: "",
-        protocol: "https",
-      },
+
       {
         hostname: "188.245.190.65",
         pathname: "**",
