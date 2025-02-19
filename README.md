@@ -4,7 +4,7 @@ Your marketplace for digital assets.
 
 <img width="50%" src="./public/digital-marketplace.webp" />
 
-### 🌐 Website : https://digital-marketplace-ghencuyfzq-nw.a.run.app/  ###
+### 🌐 Website : https://digital.marketplace.abielrodriguez.dev/  ###
 
 ## Features 💡
 
