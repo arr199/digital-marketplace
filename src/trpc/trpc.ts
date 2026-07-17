@@ -1,16 +1,16 @@
-import { type User } from '@/server/payload-types'
-import { type ExpressContext } from '@/server/server'
+import { getPayloadClient } from '@/server/get-payload'
 import { TRPCError, initTRPC } from '@trpc/server'
-import { type PayloadRequest } from 'payload/types'
 
-const t = initTRPC.context<ExpressContext>().create()
+const t = initTRPC.context<{ headers: Headers }>().create()
 const middleware = t.middleware
 
 const isAuth = middleware(async ({ ctx, next }) => {
-  const req = ctx.req as PayloadRequest
-  const { user } = req as { user: User | null }
+  const payload = await getPayloadClient()
+  const { headers } = ctx
+  const { user } = await payload.auth({ headers })
 
-  if (!user?.id) throw new TRPCError({ code: 'UNAUTHORIZED' })
+  if (!user) throw new TRPCError({ code: 'UNAUTHORIZED' })
+
   return await next({
     ctx: {
       user

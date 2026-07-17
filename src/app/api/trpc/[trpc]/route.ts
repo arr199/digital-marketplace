@@ -1,14 +1,15 @@
 import { appRouter } from '@/trpc'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 
-function handler (req: Request): void {
-  fetchRequestHandler({
+function handler (req: Request) {
+  return fetchRequestHandler({
     endpoint: '/api/trpc',
     router: appRouter,
     req,
-    // @ts-expect-error context already passed from express
-    createContext: () => ({})
-  }).catch(err => { console.log(err) })
+    createContext: () => ({
+      headers: req.headers
+    })
+  })
 }
 
 export { handler as GET, handler as POST }

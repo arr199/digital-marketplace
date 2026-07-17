@@ -1,5 +1,5 @@
 import { VerifyEmail } from '../components/emails/verifyEmail'
-import { type CollectionConfig, type Access } from 'payload/types'
+import type { CollectionConfig, Access } from 'payload'
 
 const AdminAndOwner: Access = ({ req }) => {
   const { user } = req

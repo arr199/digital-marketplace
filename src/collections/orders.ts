@@ -1,4 +1,4 @@
-import { type Access, type CollectionConfig } from 'payload/types'
+import type { Access, CollectionConfig } from 'payload'
 
 const yourOwn: Access = ({ req: { user } }) => {
   if (user.role === 'admin') return true

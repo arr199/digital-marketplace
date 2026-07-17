@@ -1,10 +1,6 @@
-import * as dotenv from 'dotenv'
-import path from 'path'
-import { type InitOptions } from 'payload/config'
-import payload, { type Payload } from 'payload'
+import { getPayload } from 'payload'
+import config from '@payload-config'
 import nodemailer from 'nodemailer'
-
-dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -17,43 +13,23 @@ const transporter = nodemailer.createTransport({
 })
 
 interface Args {
-  initOptions?: Partial<InitOptions>
-}
-let cached = (global as any).payload
-
-if (!cached) {
-  cached = (global as any).payload = {
-    client: null,
-    promise: null
+  initOptions?: {
+    express?: unknown
+    onInit?: (cms: unknown) => void
   }
 }
 
-export async function getPayloadClient ({ initOptions = {} }: Args): Promise<Payload> {
+export async function getPayloadClient ({ initOptions = {} }: Args = {}) {
   if (!process.env.PAYLOAD_SECRET) {
     throw new Error('PAYLOAD_SECRET is missing')
   }
-  if (cached.client) {
-    return cached.client
-  }
 
-  if (!cached.promise) {
-    return await payload.init({
-      email: {
-        transport: transporter,
-        fromAddress: process.env.GMAIL_SERVER_USER ?? '',
-        fromName: 'digital-hippo'
-
-      },
-      secret: process.env.PAYLOAD_SECRET,
-      local: !initOptions?.express,
-      ...(initOptions || {})
-    })
-  }
-  try {
-    cached.client = await cached.promise
-  } catch (err) {
-    cached.promise = null
-    throw err
-  }
-  return cached.client
+  return await getPayload({
+    config,
+    email: {
+      transport: transporter,
+      fromAddress: process.env.GMAIL_SERVER_USER ?? '',
+      fromName: 'digital-hippo'
+    }
+  })
 }

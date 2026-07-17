@@ -1,4 +1,4 @@
-import { type CollectionConfig, type Access } from 'payload/types'
+import type { CollectionConfig, Access } from 'payload'
 
 const isAdminOrHasAccessToImages = (): Access => {
   return async ({ req }) => {

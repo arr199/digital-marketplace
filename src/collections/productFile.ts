@@ -1,7 +1,5 @@
-import { type Product } from '../server/payload-types'
-import { type AccessResult } from 'payload/config'
-import { type BeforeChangeHook } from 'payload/dist/collections/config/types'
-import { type Access, type CollectionConfig } from 'payload/types'
+import type { Product } from '../server/payload-types'
+import type { AccessResult, BeforeChangeHook, Access, CollectionConfig } from 'payload'
 
 const addUser: BeforeChangeHook = ({ req, data }) => {
   return { ...data, user: req.user?.id }

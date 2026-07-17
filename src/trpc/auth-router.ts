@@ -33,32 +33,34 @@ export const authRouter = router({
     .query(async ({ input }) => {
       const { token } = input
       const payload = await getPayloadClient({})
-      // VERIFIED THE USER EMAIL WITH THE TOKEN SENT BY PAYLOAD
       const isVerified = await payload.verifyEmail({
         collection: 'users',
         token
       })
-      console.log('token ::', isVerified)
       if (!isVerified) throw new TRPCError({ code: 'UNAUTHORIZED' })
       return { success: true }
     }),
   loginUser: publicProcedure
     .input(AuthCredentialsSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const { email, password } = input
-      const { res } = ctx
 
       try {
         const payload = await getPayloadClient({})
-        await payload.login({
+        const result = await payload.login({
           collection: 'users',
-          data: { email, password },
-          res
+          data: { email, password }
         })
+
+        if (result.token) {
+          const cookieValue = `payload-token=${result.token}; Path=/; HttpOnly; SameSite=Lax; Secure`
+          return { success: true, token: result.token }
+        }
+
+        return { success: true }
       } catch (err) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }
-      return { success: true }
     })
 
 })

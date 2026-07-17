@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { type AfterChangeHook, type BeforeChangeHook } from 'payload/dist/globals/config/types'
+import type { AfterChangeHook, BeforeChangeHook, Access, CollectionConfig } from 'payload'
 import API from '../../lib/API'
-import { type Access, type CollectionConfig } from 'payload/types'
-import { type Product } from '@/server/payload-types'
+import type { Product } from '@/server/payload-types'
 import { stripe } from '../../lib/stripe'
 
 const addUser: BeforeChangeHook = ({ req, data }) => {
