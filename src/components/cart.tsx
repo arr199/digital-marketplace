@@ -11,7 +11,7 @@ import CartItem from './cartItem'
 import { ScrollArea } from './ui/scroll-area'
 import { useState, useEffect } from 'react'
 
-export default function Cart (): JSX.Element {
+export default function Cart (): React.ReactElement {
   const { items } = useCart()
   const itemsCount = items.length
   const totalPrice = items.reduce((acc, curr) => acc + curr.product.price, 0)

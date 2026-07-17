@@ -4,7 +4,7 @@ import { type ProductFile, type Product } from '@/server/payload-types'
 import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import payload from 'payload'
+import { getPayloadClient } from '@/server/get-payload'
 import API from '@/lib/API'
 import { formatPrice } from '@/lib/utils'
 import Link from 'next/link'
@@ -12,16 +12,18 @@ import { buttonVariants } from '@/components/ui/button'
 import PaymentStatus from '@/components/paymentStatus'
 
 interface PageProps {
-  searchParams: Record<string, string | string[] | undefined>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-export default async function Thankyou ({ searchParams }: PageProps): Promise<JSX.Element> {
-  const nextCookies = cookies()
+export default async function Thankyou ({ searchParams }: PageProps): Promise<React.ReactElement> {
+  const resolvedSearchParams = await searchParams
+  const nextCookies = await cookies()
   const { user } = await getServerSideUser(nextCookies)
+  const payload = await getPayloadClient({})
   const { docs: orders } = await payload.find({
     depth: 2,
     collection: 'orders',
-    where: { id: { equals: searchParams.orderId } }
+    where: { id: { equals: resolvedSearchParams.orderId } }
   })
 
   const [order] = orders

@@ -21,7 +21,7 @@ interface RaycastMagicLinkEmailProps {
 
 export const RaycastMagicLinkEmail = ({
   token, url
-}: RaycastMagicLinkEmailProps): JSX.Element => (
+}: RaycastMagicLinkEmailProps): React.ReactElement => (
     <Html>
       <Head />
       <Preview>Log in with this magic link.</Preview>

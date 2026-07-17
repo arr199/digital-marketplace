@@ -1,11 +1,11 @@
 'use client'
+import React, { useEffect, useState } from 'react'
 
 import MaxWidthWrapper from '@/components/maxWidthWrapper'
 import { useCart } from '@/hooks/useCart'
 import Link from 'next/link'
 import Image from 'next/image'
 import API from '@/lib/API'
-import { useEffect, useState } from 'react'
 import { formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Check, Loader2, X } from 'lucide-react'
@@ -20,7 +20,7 @@ const BREADCRUMBS = [
 
 ]
 
-export default function Page (): JSX.Element {
+export default function Page (): React.ReactElement {
   const { items, removeItem } = useCart()
   const [isMounted, setIsMounted] = useState(false)
   const router = useRouter()

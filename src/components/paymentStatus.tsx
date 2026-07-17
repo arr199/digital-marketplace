@@ -11,7 +11,7 @@ interface PaymentStatusProps {
   isPaid: boolean
 }
 
-export default function PaymentStatus ({ isPaid, orderEmail, orderId }: PaymentStatusProps): JSX.Element {
+export default function PaymentStatus ({ isPaid, orderEmail, orderId }: PaymentStatusProps): React.ReactElement {
   const router = useRouter()
   const { clearCart } = useCart()
   const { data } = trpc.payment.pollOrderStatus.useQuery({ orderId }, {

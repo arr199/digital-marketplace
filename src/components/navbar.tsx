@@ -9,8 +9,8 @@ import { cookies } from 'next/headers'
 import UserAccountDropDown from './userAccountDropDown'
 import MobileNavbar from './mobileNavbar'
 
-export default async function Navbar (): Promise<JSX.Element> {
-  const nextCookies = cookies()
+export default async function Navbar (): Promise<React.ReactElement> {
+  const nextCookies = await cookies()
   const { user } = await getServerSideUser(nextCookies)
 
   return (

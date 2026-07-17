@@ -171,7 +171,7 @@ DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName
 const DropdownMenuShortcut = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLSpanElement>): JSX.Element => {
+}: React.HTMLAttributes<HTMLSpanElement>): React.ReactElement => {
   return (
     <span
       className={cn('ml-auto text-xs tracking-widest opacity-60', className)}

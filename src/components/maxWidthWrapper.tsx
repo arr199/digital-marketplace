@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { type ReactNode } from 'react'
 
 export default function MaxWidthWrapper ({ children, className }:
-{ children: ReactNode, className?: string }): JSX.Element {
+{ children: ReactNode, className?: string }): React.ReactElement {
   return (
         <div
         className={cn(

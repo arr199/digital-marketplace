@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
 import config from '@payload-config'
@@ -17,11 +18,11 @@ const serverFunction: ServerFunctionClient = async function (args) {
   return handleServerFunctions({
     ...args,
     config,
-    importMap,
+    importMap
   })
 }
 
-const Layout = ({ children }: Args) => (
+const Layout = ({ children }: Args): React.ReactElement => (
   <RootLayout config={config} importMap={importMap} serverFunction={serverFunction}>
     {children}
   </RootLayout>

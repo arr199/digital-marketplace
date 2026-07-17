@@ -9,7 +9,7 @@ interface VerifyEmailProps {
   token: string
 }
 
-export default function VerifyEmail ({ token }: VerifyEmailProps): JSX.Element {
+export default function VerifyEmail ({ token }: VerifyEmailProps): React.ReactElement {
   const { data, isLoading, isError } = trpc.auth.verifyEmail.useQuery({ token })
 
   console.log(token)

@@ -6,7 +6,7 @@ import { ReceiptEmailHtml } from '@/components/emails/receiptEmail'
 
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? ''
 
-export async function POST (req: Request) {
+export async function POST (req: Request): Promise<Response> {
   const body = await req.text()
   const signature = req.headers.get('stripe-signature') ?? ''
 

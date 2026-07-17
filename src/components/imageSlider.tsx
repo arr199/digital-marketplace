@@ -13,7 +13,7 @@ interface ImageSliderProps {
   urls: string[]
 }
 
-export default function ImageSlider ({ urls }: ImageSliderProps): JSX.Element {
+export default function ImageSlider ({ urls }: ImageSliderProps): React.ReactElement {
   const [swiper, setSwiper] = useState < null | SwiperType>()
   const [activeIndex, setActiveIndex] = useState(0)
   const [slideConfig, setSlideConfig] = useState({

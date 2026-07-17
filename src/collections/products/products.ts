@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { AfterChangeHook, BeforeChangeHook, Access, CollectionConfig } from 'payload'
+import type { CollectionAfterChangeHook, CollectionBeforeChangeHook, Access, CollectionConfig } from 'payload'
 import API from '../../lib/API'
 import type { Product } from '@/server/payload-types'
 import { stripe } from '../../lib/stripe'
 
-const addUser: BeforeChangeHook = ({ req, data }) => {
+const addUser: CollectionBeforeChangeHook = ({ req, data }) => {
   const user = req.user
-  return { ...data, user: user.id }
+  return { ...data, user: user?.id }
 }
 const adminOrOwner: Access = ({ req }) => {
+  if (!req.user) return false
   if (req.user.role === 'admin') return true
 
   return {
@@ -19,7 +20,8 @@ const adminOrOwner: Access = ({ req }) => {
   }
 }
 
-const addProductIdToUserCollection: AfterChangeHook = async ({ req, doc }) => {
+const addProductIdToUserCollection: CollectionAfterChangeHook = async ({ req, doc }) => {
+  if (!req.user) return
   const fullUser = await req.payload.findByID({
     collection: 'users',
     id: req.user.id
@@ -139,9 +141,9 @@ export const Products: CollectionConfig = {
     // PRODUCT STATUS
     {
       access: {
-        create: ({ req }) => req.user.role === 'admin',
-        read: ({ req }) => req.user.role === 'admin',
-        update: ({ req }) => req.user.role === 'admin'
+        create: ({ req }) => req.user?.role === 'admin',
+        read: ({ req }) => req.user?.role === 'admin',
+        update: ({ req }) => req.user?.role === 'admin'
 
       },
       name: 'approvedForSale',

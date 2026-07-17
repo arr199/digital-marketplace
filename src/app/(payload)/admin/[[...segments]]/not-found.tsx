@@ -1,9 +1,9 @@
+/* eslint-disable */
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
 import config from '@payload-config'
-import { NotFoundPage, generateNotFoundMetadata } from '@payloadcms/next/views'
-
-import type { Metadata } from 'next'
+import { NotFoundPage } from '@payloadcms/next/views'
+import { importMap } from '../importMap.js'
 
 type Args = {
   params: Promise<{
@@ -14,10 +14,7 @@ type Args = {
   }>
 }
 
-export const generateMetadata = ({ params, searchParams }: Args): Promise<Metadata> =>
-  generateNotFoundMetadata({ config, params, searchParams })
-
-const NotFound = ({ params, searchParams }: Args) =>
-  NotFoundPage({ config, params, searchParams })
+const NotFound = ({ params, searchParams }: Args): Promise<React.ReactElement> =>
+  NotFoundPage({ config: Promise.resolve(config), importMap, params, searchParams })
 
 export default NotFound

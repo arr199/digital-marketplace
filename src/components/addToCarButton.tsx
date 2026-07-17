@@ -6,7 +6,7 @@ import { type Product } from '@/server/payload-types'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
-export default function AddToCartButton ({ product }: { product: Product }): JSX.Element {
+export default function AddToCartButton ({ product }: { product: Product }): React.ReactElement {
   const [isSuccess, setIsSuccess] = useState<boolean>()
   const { addItem, items } = useCart()
 

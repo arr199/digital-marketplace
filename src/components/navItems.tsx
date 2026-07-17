@@ -5,10 +5,10 @@ import NavItem from './navitem'
 import React, { useEffect, useRef, useState } from 'react'
 import { useOnClickOutside } from '@/hooks/useOnClickOutside'
 
-export function NavItems (): JSX.Element {
+export function NavItems (): React.ReactElement {
   const [activeIndex, setActiveIndex] = useState<null | number>(null)
-  const navItem = useRef<HTMLDivElement | null>(null)
-  useOnClickOutside(navItem, () => { setActiveIndex(null) })
+  const navItem = useRef<HTMLDivElement>(null)
+  useOnClickOutside(navItem as React.RefObject<HTMLElement>, () => { setActiveIndex(null) })
 
   useEffect(() => {
     function handler (e: KeyboardEventInit): void {

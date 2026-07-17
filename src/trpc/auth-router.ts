@@ -53,7 +53,6 @@ export const authRouter = router({
         })
 
         if (result.token) {
-          const cookieValue = `payload-token=${result.token}; Path=/; HttpOnly; SameSite=Lax; Secure`
           return { success: true, token: result.token }
         }
 

@@ -3,6 +3,7 @@ import type { CollectionConfig, Access } from 'payload'
 
 const AdminAndOwner: Access = ({ req }) => {
   const { user } = req
+  if (!user) return false
   if (user.role === 'admin') return true
 
   return {
@@ -26,11 +27,11 @@ export const Users: CollectionConfig = {
   access: {
     read: AdminAndOwner,
     create: () => true,
-    update: ({ req }) => req.user.role === 'admin',
-    delete: ({ req }) => req.user.role === 'admin'
+    update: ({ req }) => req.user?.role === 'admin',
+    delete: ({ req }) => req.user?.role === 'admin'
   },
   admin: {
-    hidden: ({ user }) => user.role !== 'admin',
+    hidden: ({ user }) => user?.role !== 'admin',
     defaultColumns: ['id']
   },
   fields: [
@@ -71,7 +72,7 @@ export const Users: CollectionConfig = {
 
       },
       access: {
-        update: ({ req }) => req.user.role === 'admin'
+        update: ({ req }) => req.user?.role === 'admin'
 
       },
       type: 'select',

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import React from 'react'
 import { Inter } from 'next/font/google'
 import './global.css'
 import { cn } from '@/lib/utils'
@@ -20,7 +21,7 @@ export default function RootLayout ({
   children
 }: {
   children: React.ReactNode
-}): JSX.Element {
+}): React.ReactElement {
   return (
       <html lang="en" className='h-full'>
         <Providers>

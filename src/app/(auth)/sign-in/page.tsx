@@ -1,4 +1,5 @@
 'use client'
+import React, { Suspense } from 'react'
 import { Icons } from '@/components/icons'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +14,15 @@ import { trpc } from '@/trpc/client'
 import { toast } from 'sonner'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function Page (): JSX.Element {
+export default function Page (): React.ReactElement {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInForm />
+    </Suspense>
+  )
+}
+
+function SignInForm (): React.ReactElement {
   const { register, handleSubmit, formState: { errors } } = useForm<AuthCredentials>({ resolver: zodResolver(AuthCredentialsSchema) })
   const router = useRouter()
   const searchParams = useSearchParams()

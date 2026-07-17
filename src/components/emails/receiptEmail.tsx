@@ -33,7 +33,7 @@ export const ReceiptEmail = ({
   date,
   orderId,
   products
-}: ReceiptEmailProps): JSX.Element => {
+}: ReceiptEmailProps): React.ReactElement => {
   const total =
     products.reduce((acc, curr) => acc + curr.price, 0) + 1
 

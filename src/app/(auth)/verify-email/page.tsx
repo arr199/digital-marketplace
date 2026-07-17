@@ -2,12 +2,13 @@ import VerifyEmail from '@/components/verifyEmail'
 import Image from 'next/image'
 
 interface PageProps {
-  searchParams: Record<string, string | string[] | undefined>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-export default function Page ({ searchParams }: PageProps): JSX.Element {
-  const token = searchParams.token
-  const toEmail = searchParams.to
+export default async function Page ({ searchParams }: PageProps): Promise<React.ReactElement> {
+  const resolvedSearchParams = await searchParams
+  const token = resolvedSearchParams.token
+  const toEmail = resolvedSearchParams.to
   return (
    <div className='container flex flex-col pt-20 items-center justify-center lg:px-0'>
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">

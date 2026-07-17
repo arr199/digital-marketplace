@@ -12,9 +12,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     productId: string
-  }
+  }>
 }
 const BREADCRUMBS = [
   { id: 1, name: 'Home', href: '/' },
@@ -22,7 +22,8 @@ const BREADCRUMBS = [
 
 ]
 
-export default async function Page ({ params: { productId } }: PageProps): Promise<JSX.Element> {
+export default async function Page ({ params }: PageProps): Promise<React.ReactElement> {
+  const { productId } = await params
   const payload = await getPayloadClient({})
   const { docs: products } = await payload.find({
     collection: 'products',

@@ -13,7 +13,7 @@ interface ProductListingProps {
 
 }
 
-export default function ProductListing ({ product, index }: ProductListingProps): JSX.Element {
+export default function ProductListing ({ product, index }: ProductListingProps): React.ReactElement {
   const [isVisible, setIsVisible] = useState<boolean>(false)
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function ProductListing ({ product, index }: ProductListingProps)
   return <></>
 }
 
-export function ProductPlaceholder (): JSX.Element {
+export function ProductPlaceholder (): React.ReactElement {
   return (
    <div className='flex flex-col w-full'>
     <div className='relative aspect-square w-full bg-zinc-100 overflow-hidden rounded-xl'>

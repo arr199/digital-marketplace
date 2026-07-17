@@ -5,9 +5,9 @@ import { type Product } from '@/server/payload-types'
 import { ImageIcon, X } from 'lucide-react'
 import Image from 'next/image'
 
-export default function CardItem ({ product }: { product: Product }): JSX.Element {
+export default function CardItem ({ product }: { product: Product }): React.ReactElement {
   const { removeItem } = useCart()
-  const image = product?.images?.[0].image.url
+  const image = (product?.images?.[0]?.image as any)?.url
 
   const label = API.PRODUCT_CATEGORIES.find((e) => e.value === product.category)?.label
 

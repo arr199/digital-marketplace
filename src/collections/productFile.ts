@@ -1,14 +1,14 @@
 import type { Product } from '../server/payload-types'
-import type { AccessResult, BeforeChangeHook, Access, CollectionConfig } from 'payload'
+import type { AccessResult, CollectionBeforeChangeHook, Access, CollectionConfig } from 'payload'
 
-const addUser: BeforeChangeHook = ({ req, data }) => {
+const addUser: CollectionBeforeChangeHook = ({ req, data }) => {
   return { ...data, user: req.user?.id }
 }
 
 const yourOwnOrPurchased: Access = async ({ req }): Promise<AccessResult> => {
   const user = req.user
-  if (user.role === 'admin') return true
   if (!user) return false
+  if (user.role === 'admin') return true
 
   const { docs: products } = await req.payload.find({
     collection: 'products',
@@ -45,18 +45,17 @@ const yourOwnOrPurchased: Access = async ({ req }): Promise<AccessResult> => {
 export const ProductFiles: CollectionConfig = {
   slug: 'product_files',
   admin: {
-    hidden: ({ user }) => user.role !== 'admin'
+    hidden: ({ user }) => user?.role !== 'admin'
   },
   hooks: {
     beforeChange: [addUser]
   },
   access: {
     read: yourOwnOrPurchased,
-    update: ({ req }) => req.user.role === 'admin',
-    delete: ({ req }) => req.user.role === 'admin'
+    update: ({ req }) => req.user?.role === 'admin',
+    delete: ({ req }) => req.user?.role === 'admin'
   },
   upload: {
-    staticURL: '/products_files',
     staticDir: 'products_files',
     mimeTypes: ['image/*', 'font/*', 'application/postscripts']
   },

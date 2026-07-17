@@ -15,7 +15,7 @@ interface ProductReelProps {
 }
 const FALLBACK_LIMIT = 4
 
-export default function ProductReel ({ title, subtitle, href, query }: ProductReelProps): JSX.Element {
+export default function ProductReel ({ title, subtitle, href, query }: ProductReelProps): React.ReactElement {
   const { data, isLoading } = trpc.getInfiniteProducts.useInfiniteQuery({
     limit: query.limit ?? FALLBACK_LIMIT,
     query

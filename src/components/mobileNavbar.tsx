@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import { MenuIcon } from 'lucide-react'
 
-export default function MobileNavbar ({ user }: { user: User | null }): JSX.Element {
+export default function MobileNavbar ({ user }: { user: User | null }): React.ReactElement {
   const { signOut } = useAuth()
   return (
       <DropdownMenu>

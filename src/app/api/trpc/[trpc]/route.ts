@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/promise-function-async */
 import { appRouter } from '@/trpc'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 

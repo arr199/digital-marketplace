@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 import { Icons } from '@/components/icons'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +14,7 @@ import { trpc } from '@/trpc/client'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
-export default function Page (): JSX.Element {
+export default function Page (): React.ReactElement {
   const { register, handleSubmit, formState: { errors } } = useForm<AuthCredentials>({ resolver: zodResolver(AuthCredentialsSchema) })
   const router = useRouter()
 

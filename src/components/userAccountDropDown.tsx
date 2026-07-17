@@ -12,7 +12,7 @@ import { type User } from '../server/payload-types'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 
-export default function UserAccountDropDown ({ user }: { user: User }): JSX.Element {
+export default function UserAccountDropDown ({ user }: { user: User }): React.ReactElement {
   const { signOut } = useAuth()
   return (
     <DropdownMenu>

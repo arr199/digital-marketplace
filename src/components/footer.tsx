@@ -5,7 +5,7 @@ import MaxWidthWrapper from './maxWidthWrapper'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
-export default function Footer (): JSX.Element {
+export default function Footer (): React.ReactElement {
   const pathToMinimize = ['/verify-email', '/sign-up', '/sign-in']
 
   const currentPath = usePathname()

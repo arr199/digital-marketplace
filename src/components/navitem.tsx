@@ -15,7 +15,7 @@ interface NavItemsProps {
   isAnyOpen: boolean
 }
 
-export default function NavItem ({ category, isAnyOpen, handleOpen, isOpen }: NavItemsProps): JSX.Element {
+export default function NavItem ({ category, isAnyOpen, handleOpen, isOpen }: NavItemsProps): React.ReactElement {
   return (
 
         <div className="flex">

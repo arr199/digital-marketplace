@@ -7,7 +7,7 @@ const isAdminOrHasAccessToImages = (): Access => {
     if (user.role === 'admin') return true
     return {
       user: {
-        equals: req.user.id
+        equals: user.id
       }
     }
   }
@@ -17,15 +17,15 @@ export const Media: CollectionConfig = {
   slug: 'media',
   hooks: {
     beforeChange: [({ req, data }) => {
-      return { ...data, user: req.user.id }
+      return { ...data, user: req.user?.id }
     }]
   },
   admin: {
-    hidden: ({ user }) => user.role !== 'admin'
+    hidden: ({ user }) => user?.role !== 'admin'
   },
   access: {
     read: async ({ req }) => {
-      const refer = req.headers.referer
+      const refer = req.headers.get('referer')
       if (!req.user || !refer?.includes('sell')) {
         return true
       }
@@ -35,7 +35,6 @@ export const Media: CollectionConfig = {
     update: isAdminOrHasAccessToImages()
   },
   upload: {
-    staticURL: '/media',
     staticDir: 'media',
     imageSizes: [{
       name: 'thumbnail',
