@@ -1,5 +1,6 @@
 import React from 'react'
 import { Inter } from 'next/font/google'
+import '../global.css'
 import { cn } from '@/lib/utils'
 import Navbar from '@/components/navbar'
 import Providers from '@/components/providers'

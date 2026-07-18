@@ -16,7 +16,7 @@ export async function getServerSideUser (
   try {
     const payload = await getPayloadClient({})
     const { user } = await payload.auth({ headers })
-    return { user: user ?? null }
+    return { user: (user as unknown as User) ?? null }
   } catch {
     return { user: null }
   }
