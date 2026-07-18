@@ -12,34 +12,34 @@
 
 ## File Structure Map
 
-| File | Action | Purpose |
-|---|---|---|
-| `payload.config.ts` | Create (root) | Payload 3 config — migrated from `src/server/payload.config.ts` |
-| `next.config.mjs` | Rename from `.js` | ESM config with `withPayload` plugin |
-| `src/app/(payload)/admin/[[...segments]]/page.tsx` | Create | Payload admin panel entry |
-| `src/app/(payload)/admin/[[...segments]]/not-found.tsx` | Create | Payload admin 404 |
-| `src/app/(payload)/api/[...slug]/route.ts` | Create | Payload REST API handler |
-| `src/app/(payload)/layout.tsx` | Create | Payload admin root layout |
-| `src/app/(payload)/custom.scss` | Create | Payload admin custom styles |
-| `src/app/api/webhooks/stripe/route.ts` | Create | Stripe webhook handler (from Express) |
-| `src/server/get-payload.ts` | Modify | Rewrite for Payload 3 `getPayload` API |
-| `src/trpc/trpc.ts` | Modify | Change auth context from Express to headers |
-| `src/trpc/auth-router.ts` | Modify | Login sets cookie manually |
-| `src/app/api/trpc/[trpc]/route.ts` | Modify | Pass headers in context |
-| `src/middleware.ts` | Modify | Add cart auth protection |
-| `src/components/providers.tsx` | Modify | tRPC URL no longer needs server URL prefix |
-| `src/collections/users.ts` | Modify | Import path changes |
-| `src/collections/products/products.ts` | Modify | Import path changes |
-| `src/collections/orders.ts` | Modify | Import path changes |
-| `src/collections/media.ts` | Modify | Import path changes |
-| `src/collections/productFile.ts` | Modify | Import path changes |
-| `tsconfig.json` | Modify | Add `@payload-config` path alias |
-| `package.json` | Modify | Updated deps and scripts |
-| `src/server/server.ts` | Delete | No longer needed |
-| `src/server/next-utils.ts` | Delete | No longer needed |
-| `tsconfig.server.json` | Delete | No longer needed |
-| `nodemon.json` | Delete | No longer needed |
-| `Dockerfile` | Delete | No longer needed |
+| File                                                    | Action            | Purpose                                                         |
+| ------------------------------------------------------- | ----------------- | --------------------------------------------------------------- |
+| `payload.config.ts`                                     | Create (root)     | Payload 3 config — migrated from `src/server/payload.config.ts` |
+| `next.config.mjs`                                       | Rename from `.js` | ESM config with `withPayload` plugin                            |
+| `src/app/(payload)/admin/[[...segments]]/page.tsx`      | Create            | Payload admin panel entry                                       |
+| `src/app/(payload)/admin/[[...segments]]/not-found.tsx` | Create            | Payload admin 404                                               |
+| `src/app/(payload)/api/[...slug]/route.ts`              | Create            | Payload REST API handler                                        |
+| `src/app/(payload)/layout.tsx`                          | Create            | Payload admin root layout                                       |
+| `src/app/(payload)/custom.scss`                         | Create            | Payload admin custom styles                                     |
+| `src/app/api/webhooks/stripe/route.ts`                  | Create            | Stripe webhook handler (from Express)                           |
+| `src/server/get-payload.ts`                             | Modify            | Rewrite for Payload 3 `getPayload` API                          |
+| `src/trpc/trpc.ts`                                      | Modify            | Change auth context from Express to headers                     |
+| `src/trpc/auth-router.ts`                               | Modify            | Login sets cookie manually                                      |
+| `src/app/api/trpc/[trpc]/route.ts`                      | Modify            | Pass headers in context                                         |
+| `src/middleware.ts`                                     | Modify            | Add cart auth protection                                        |
+| `src/components/providers.tsx`                          | Modify            | tRPC URL no longer needs server URL prefix                      |
+| `src/collections/users.ts`                              | Modify            | Import path changes                                             |
+| `src/collections/products/products.ts`                  | Modify            | Import path changes                                             |
+| `src/collections/orders.ts`                             | Modify            | Import path changes                                             |
+| `src/collections/media.ts`                              | Modify            | Import path changes                                             |
+| `src/collections/productFile.ts`                        | Modify            | Import path changes                                             |
+| `tsconfig.json`                                         | Modify            | Add `@payload-config` path alias                                |
+| `package.json`                                          | Modify            | Updated deps and scripts                                        |
+| `src/server/server.ts`                                  | Delete            | No longer needed                                                |
+| `src/server/next-utils.ts`                              | Delete            | No longer needed                                                |
+| `tsconfig.server.json`                                  | Delete            | No longer needed                                                |
+| `nodemon.json`                                          | Delete            | No longer needed                                                |
+| `Dockerfile`                                            | Delete            | No longer needed                                                |
 
 ---
 
@@ -131,41 +131,41 @@ git commit -m "chore: upgrade to Payload 3, Next.js 16, remove Express dependenc
 Create `D:\1CODING\NextJS\digital-marketplace\payload.config.ts`:
 
 ```typescript
-import { buildConfig } from 'payload'
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import path from 'path'
-import sharp from 'sharp'
-import { Users } from './src/collections/users'
-import { Products } from './src/collections/products/products'
-import { Media } from './src/collections/media'
-import { ProductFiles } from './src/collections/productFile'
-import { Orders } from './src/collections/orders'
+import { buildConfig } from 'payload';
+import { mongooseAdapter } from '@payloadcms/db-mongodb';
+import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import path from 'path';
+import sharp from 'sharp';
+import { Users } from './src/collections/users';
+import { Products } from './src/collections/products/products';
+import { Media } from './src/collections/media';
+import { ProductFiles } from './src/collections/productFile';
+import { Orders } from './src/collections/orders';
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET ?? '',
   collections: [Users, Products, Media, ProductFiles, Orders],
   routes: {
-    admin: '/sell'
+    admin: '/sell',
   },
   admin: {
     user: 'users',
     meta: {
       titleSuffix: '- DigitalHippo',
       favicon: '/favicon.ico',
-      ogImage: '/thumbnail.jpg'
-    }
+      ogImage: '/thumbnail.jpg',
+    },
   },
   rateLimit: { max: 2000 },
   editor: lexicalEditor(),
   db: mongooseAdapter({
-    url: process.env.MONGODB_URL ?? ''
+    url: process.env.MONGODB_URL ?? '',
   }),
   sharp,
   typescript: {
-    outputFile: path.resolve(__dirname, 'src/server/payload-types.ts')
-  }
-})
+    outputFile: path.resolve(__dirname, 'src/server/payload-types.ts'),
+  },
+});
 ```
 
 - [ ] **Step 2: Remove old payload.config.ts**
@@ -200,27 +200,30 @@ Create `D:\1CODING\NextJS\digital-marketplace\src\app\(payload)\admin\[[...segme
 ```typescript
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
-import config from '@payload-config'
-import { AdminPage, generatePageMetadata } from '@payloadcms/next/views'
+import config from '@payload-config';
+import { AdminPage, generatePageMetadata } from '@payloadcms/next/views';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 type Args = {
   params: Promise<{
-    segments: string[]
-  }>
+    segments: string[];
+  }>;
   searchParams: Promise<{
-    [key: string]: string | string[]
-  }>
-}
+    [key: string]: string | string[];
+  }>;
+};
 
-export const generateMetadata = ({ params, searchParams }: Args): Promise<Metadata> =>
-  generatePageMetadata({ config, params, searchParams })
+export const generateMetadata = ({
+  params,
+  searchParams,
+}: Args): Promise<Metadata> =>
+  generatePageMetadata({ config, params, searchParams });
 
 const Page = ({ params, searchParams }: Args) =>
-  AdminPage({ config, params, searchParams })
+  AdminPage({ config, params, searchParams });
 
-export default Page
+export default Page;
 ```
 
 - [ ] **Step 3: Create admin not-found page**
@@ -230,27 +233,30 @@ Create `D:\1CODING\NextJS\digital-marketplace\src\app\(payload)\admin\[[...segme
 ```typescript
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
-import config from '@payload-config'
-import { NotFoundPage, generateNotFoundMetadata } from '@payloadcms/next/views'
+import config from '@payload-config';
+import { NotFoundPage, generateNotFoundMetadata } from '@payloadcms/next/views';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 type Args = {
   params: Promise<{
-    segments: string[]
-  }>
+    segments: string[];
+  }>;
   searchParams: Promise<{
-    [key: string]: string | string[]
-  }>
-}
+    [key: string]: string | string[];
+  }>;
+};
 
-export const generateMetadata = ({ params, searchParams }: Args): Promise<Metadata> =>
-  generateNotFoundMetadata({ config, params, searchParams })
+export const generateMetadata = ({
+  params,
+  searchParams,
+}: Args): Promise<Metadata> =>
+  generateNotFoundMetadata({ config, params, searchParams });
 
 const NotFound = ({ params, searchParams }: Args) =>
-  NotFoundPage({ config, params, searchParams })
+  NotFoundPage({ config, params, searchParams });
 
-export default NotFound
+export default NotFound;
 ```
 
 - [ ] **Step 4: Create API route handler**
@@ -260,14 +266,20 @@ Create `D:\1CODING\NextJS\digital-marketplace\src\app\(payload)\api\[...slug]\ro
 ```typescript
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY PAYLOAD. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
-import config from '@payload-config'
-import { REST_DELETE, REST_GET, REST_OPTIONS, REST_PATCH, REST_POST } from '@payloadcms/next/routes'
+import config from '@payload-config';
+import {
+  REST_DELETE,
+  REST_GET,
+  REST_OPTIONS,
+  REST_PATCH,
+  REST_POST,
+} from '@payloadcms/next/routes';
 
-export const GET = REST_GET(config)
-export const POST = REST_POST(config)
-export const DELETE = REST_DELETE(config)
-export const PATCH = REST_PATCH(config)
-export const OPTIONS = REST_OPTIONS(config)
+export const GET = REST_GET(config);
+export const POST = REST_POST(config);
+export const DELETE = REST_DELETE(config);
+export const PATCH = REST_PATCH(config);
+export const OPTIONS = REST_OPTIONS(config);
 ```
 
 - [ ] **Step 5: Create admin layout**
@@ -337,7 +349,7 @@ Rename-Item -LiteralPath "next.config.js" -NewName "next.config.mjs"
 Write `D:\1CODING\NextJS\digital-marketplace\next.config.mjs`:
 
 ```javascript
-import { withPayload } from '@payloadcms/next/withPayload'
+import { withPayload } from '@payloadcms/next/withPayload';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -363,9 +375,9 @@ const nextConfig = {
       },
     ],
   },
-}
+};
 
-export default withPayload(nextConfig)
+export default withPayload(nextConfig);
 ```
 
 - [ ] **Step 3: Commit**
@@ -415,12 +427,15 @@ All five collections currently import from `payload/types` and `payload/dist/*`.
 - [ ] **Step 1: Fix `src/collections/users.ts`**
 
 Change the import line from:
+
 ```typescript
-import { type CollectionConfig, type Access } from 'payload/types'
+import { type CollectionConfig, type Access } from 'payload/types';
 ```
+
 To:
+
 ```typescript
-import type { CollectionConfig, Access } from 'payload'
+import type { CollectionConfig, Access } from 'payload';
 ```
 
 Delete the empty `.env` read import if present (the `VerifyEmail` component import stays the same).
@@ -428,58 +443,73 @@ Delete the empty `.env` read import if present (the `VerifyEmail` component impo
 - [ ] **Step 2: Fix `src/collections/products/products.ts`**
 
 Change:
+
 ```typescript
-import { type AfterChangeHook, type BeforeChangeHook } from 'payload/dist/globals/config/types'
-import API from '../../lib/API'
-import { type Access, type CollectionConfig } from 'payload/types'
-import { type Product } from '@/server/payload-types'
-import { stripe } from '../../lib/stripe'
+import {
+  type AfterChangeHook,
+  type BeforeChangeHook,
+} from 'payload/dist/globals/config/types';
+import API from '../../lib/API';
+import { type Access, type CollectionConfig } from 'payload/types';
+import { type Product } from '@/server/payload-types';
+import { stripe } from '../../lib/stripe';
 ```
+
 To:
+
 ```typescript
-import type { AfterChangeHook, BeforeChangeHook } from 'payload'
-import API from '../../lib/API'
-import type { Access, CollectionConfig } from 'payload'
-import type { Product } from '@/server/payload-types'
-import { stripe } from '../../lib/stripe'
+import type { AfterChangeHook, BeforeChangeHook } from 'payload';
+import API from '../../lib/API';
+import type { Access, CollectionConfig } from 'payload';
+import type { Product } from '@/server/payload-types';
+import { stripe } from '../../lib/stripe';
 ```
 
 - [ ] **Step 3: Fix `src/collections/orders.ts`**
 
 Change:
+
 ```typescript
-import { type Access, type CollectionConfig } from 'payload/types'
+import { type Access, type CollectionConfig } from 'payload/types';
 ```
+
 To:
+
 ```typescript
-import type { Access, CollectionConfig } from 'payload'
+import type { Access, CollectionConfig } from 'payload';
 ```
 
 - [ ] **Step 4: Fix `src/collections/media.ts`**
 
 Change:
+
 ```typescript
-import { type CollectionConfig, type Access } from 'payload/types'
+import { type CollectionConfig, type Access } from 'payload/types';
 ```
+
 To:
+
 ```typescript
-import type { CollectionConfig, Access } from 'payload'
+import type { CollectionConfig, Access } from 'payload';
 ```
 
 - [ ] **Step 5: Fix `src/collections/productFile.ts`**
 
 Change:
+
 ```typescript
-import { type Product } from '../server/payload-types'
-import { type AccessResult } from 'payload/config'
-import { type BeforeChangeHook } from 'payload/dist/collections/config/types'
-import { type Access, type CollectionConfig } from 'payload/types'
+import { type Product } from '../server/payload-types';
+import { type AccessResult } from 'payload/config';
+import { type BeforeChangeHook } from 'payload/dist/collections/config/types';
+import { type Access, type CollectionConfig } from 'payload/types';
 ```
+
 To:
+
 ```typescript
-import type { Product } from '../server/payload-types'
-import type { AccessResult } from 'payload'
-import type { BeforeChangeHook, Access, CollectionConfig } from 'payload'
+import type { Product } from '../server/payload-types';
+import type { AccessResult } from 'payload';
+import type { BeforeChangeHook, Access, CollectionConfig } from 'payload';
 ```
 
 - [ ] **Step 6: Commit**
@@ -498,9 +528,9 @@ git commit -m "fix: update collection imports for Payload 3"
 Read the current file first, then rewrite `D:\1CODING\NextJS\digital-marketplace\src\server\get-payload.ts`:
 
 ```typescript
-import { getPayload } from 'payload'
-import config from '@payload-config'
-import nodemailer from 'nodemailer'
+import { getPayload } from 'payload';
+import config from '@payload-config';
+import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -508,20 +538,20 @@ const transporter = nodemailer.createTransport({
   port: 465,
   auth: {
     user: process.env.GMAIL_SERVER_USER,
-    pass: process.env.GMAIL_SERVER_PASS
-  }
-})
+    pass: process.env.GMAIL_SERVER_PASS,
+  },
+});
 
 interface Args {
   initOptions?: {
-    express?: unknown
-    onInit?: (cms: unknown) => void
-  }
+    express?: unknown;
+    onInit?: (cms: unknown) => void;
+  };
 }
 
-export async function getPayloadClient ({ initOptions = {} }: Args = {}) {
+export async function getPayloadClient({ initOptions = {} }: Args = {}) {
   if (!process.env.PAYLOAD_SECRET) {
-    throw new Error('PAYLOAD_SECRET is missing')
+    throw new Error('PAYLOAD_SECRET is missing');
   }
 
   const payload = await getPayload({
@@ -529,11 +559,11 @@ export async function getPayloadClient ({ initOptions = {} }: Args = {}) {
     email: {
       transport: transporter,
       fromAddress: process.env.GMAIL_SERVER_USER ?? '',
-      fromName: 'digital-hippo'
-    }
-  })
+      fromName: 'digital-hippo',
+    },
+  });
 
-  return payload
+  return payload;
 }
 ```
 
@@ -553,29 +583,29 @@ git commit -m "fix: rewrite getPayloadClient for Payload 3 getPayload API"
 Read the current file first, then rewrite `D:\1CODING\NextJS\digital-marketplace\src\trpc\trpc.ts`:
 
 ```typescript
-import { getPayloadClient } from '@/server/get-payload'
-import { TRPCError, initTRPC } from '@trpc/server'
+import { getPayloadClient } from '@/server/get-payload';
+import { TRPCError, initTRPC } from '@trpc/server';
 
-const t = initTRPC.context<{ headers: Headers }>().create()
-const middleware = t.middleware
+const t = initTRPC.context<{ headers: Headers }>().create();
+const middleware = t.middleware;
 
 const isAuth = middleware(async ({ ctx, next }) => {
-  const payload = await getPayloadClient()
-  const { headers } = ctx
-  const { user } = await payload.auth({ headers })
+  const payload = await getPayloadClient();
+  const { headers } = ctx;
+  const { user } = await payload.auth({ headers });
 
-  if (!user) throw new TRPCError({ code: 'UNAUTHORIZED' })
+  if (!user) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
   return await next({
     ctx: {
-      user
-    }
-  })
-})
+      user,
+    },
+  });
+});
 
-export const router = t.router
-export const publicProcedure = t.procedure
-export const privateProcedure = t.procedure.use(isAuth)
+export const router = t.router;
+export const publicProcedure = t.procedure;
+export const privateProcedure = t.procedure.use(isAuth);
 ```
 
 - [ ] **Step 2: Commit**
@@ -599,30 +629,30 @@ Change the `loginUser` mutation in `D:\1CODING\NextJS\digital-marketplace\src\tr
 loginUser: publicProcedure
   .input(AuthCredentialsSchema)
   .mutation(async ({ input, ctx }) => {
-    const { email, password } = input
-    const { headers } = ctx
+    const { email, password } = input;
+    const { headers } = ctx;
 
     try {
-      const payload = await getPayloadClient({})
+      const payload = await getPayloadClient({});
       const result = await payload.login({
         collection: 'users',
-        data: { email, password }
-      })
+        data: { email, password },
+      });
 
       if (result.token) {
-        const responseHeaders = new Headers()
+        const responseHeaders = new Headers();
         responseHeaders.set(
           'Set-Cookie',
-          `payload-token=${result.token}; Path=/; HttpOnly; SameSite=Lax; Secure`
-        )
-        return { success: true, token: result.token }
+          `payload-token=${result.token}; Path=/; HttpOnly; SameSite=Lax; Secure`,
+        );
+        return { success: true, token: result.token };
       }
 
-      return { success: true }
+      return { success: true };
     } catch (err) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' })
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
-  })
+  });
 ```
 
 - [ ] **Step 2: Commit**
@@ -641,21 +671,21 @@ git commit -m "fix: update loginUser to use Payload 3 Local API auth"
 Read the current file first, then rewrite `D:\1CODING\NextJS\digital-marketplace\src\app\api\trpc\[trpc]\route.ts`:
 
 ```typescript
-import { appRouter } from '@/trpc'
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
+import { appRouter } from '@/trpc';
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 
-function handler (req: Request) {
+function handler(req: Request) {
   return fetchRequestHandler({
     endpoint: '/api/trpc',
     router: appRouter,
     req,
     createContext: () => ({
-      headers: req.headers
-    })
-  })
+      headers: req.headers,
+    }),
+  });
 }
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
 ```
 
 - [ ] **Step 2: Commit**
@@ -674,69 +704,76 @@ git commit -m "fix: update tRPC route handler to pass headers in context"
 Create `D:\1CODING\NextJS\digital-marketplace\src\app\api\webhooks\stripe\route.ts`:
 
 ```typescript
-import { getPayloadClient } from '@/server/get-payload'
-import type { Product } from '@/server/payload-types'
-import Stripe from 'stripe'
-import nodemailer from 'nodemailer'
-import { ReceiptEmailHtml } from '@/components/emails/receiptEmail'
+import { getPayloadClient } from '@/server/get-payload';
+import type { Product } from '@/server/payload-types';
+import Stripe from 'stripe';
+import nodemailer from 'nodemailer';
+import { ReceiptEmailHtml } from '@/components/emails/receiptEmail';
 
-const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? ''
+const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? '';
 
-export async function POST (req: Request) {
-  const body = await req.text()
-  const signature = req.headers.get('stripe-signature') ?? ''
+export async function POST(req: Request) {
+  const body = await req.text();
+  const signature = req.headers.get('stripe-signature') ?? '';
 
-  let event: Stripe.Event
+  let event: Stripe.Event;
   try {
     event = Stripe.webhooks.constructEvent(
       body,
       signature,
-      stripeWebhookSecret
-    )
+      stripeWebhookSecret,
+    );
   } catch (err) {
     return Response.json(
-      { error: `Webhook Error: ${err instanceof Error ? err.message : 'Unknown Error'}` },
-      { status: 400 }
-    )
+      {
+        error: `Webhook Error: ${err instanceof Error ? err.message : 'Unknown Error'}`,
+      },
+      { status: 400 },
+    );
   }
 
-  const session = event.data.object as Stripe.Checkout.Session
+  const session = event.data.object as Stripe.Checkout.Session;
 
   if (!session?.metadata?.userId || !session?.metadata?.orderId) {
-    return Response.json({ error: 'No user present in metadata' }, { status: 400 })
+    return Response.json(
+      { error: 'No user present in metadata' },
+      { status: 400 },
+    );
   }
 
   if (event.type === 'checkout.session.completed') {
-    const payload = await getPayloadClient({})
+    const payload = await getPayloadClient({});
 
     const { docs: users } = await payload.find({
       collection: 'users',
       where: {
-        id: { equals: session.metadata.userId }
-      }
-    })
+        id: { equals: session.metadata.userId },
+      },
+    });
 
-    const [user] = users
-    if (!user) return Response.json({ error: 'No such user exists.' }, { status: 404 })
+    const [user] = users;
+    if (!user)
+      return Response.json({ error: 'No such user exists.' }, { status: 404 });
 
     const { docs: orders } = await payload.find({
       collection: 'orders',
       depth: 2,
       where: {
-        id: { equals: session.metadata.orderId }
-      }
-    })
+        id: { equals: session.metadata.orderId },
+      },
+    });
 
-    const [order] = orders
-    if (!order) return Response.json({ error: 'No such order exists.' }, { status: 404 })
+    const [order] = orders;
+    if (!order)
+      return Response.json({ error: 'No such order exists.' }, { status: 404 });
 
     await payload.update({
       collection: 'orders',
       data: { isPaid: true },
       where: {
-        id: { equals: session.metadata.orderId }
-      }
-    })
+        id: { equals: session.metadata.orderId },
+      },
+    });
 
     try {
       const transporter = nodemailer.createTransport({
@@ -745,9 +782,9 @@ export async function POST (req: Request) {
         port: 465,
         auth: {
           user: process.env.GMAIL_SERVER_USER,
-          pass: process.env.GMAIL_SERVER_PASS
-        }
-      })
+          pass: process.env.GMAIL_SERVER_PASS,
+        },
+      });
 
       await transporter.sendMail({
         from: process.env.GMAIL_SERVER_USER,
@@ -757,17 +794,20 @@ export async function POST (req: Request) {
           date: new Date(),
           email: user.email,
           orderId: session.metadata.orderId,
-          products: order.products as Product[]
-        })
-      })
+          products: order.products as Product[],
+        }),
+      });
 
-      return Response.json({ success: true })
+      return Response.json({ success: true });
     } catch (error) {
-      return Response.json({ error: 'Failed to send receipt' }, { status: 500 })
+      return Response.json(
+        { error: 'Failed to send receipt' },
+        { status: 500 },
+      );
     }
   }
 
-  return Response.json({ received: true })
+  return Response.json({ received: true });
 }
 ```
 
@@ -787,24 +827,26 @@ git commit -m "feat: migrate Stripe webhook from Express to Next.js Route Handle
 Read the current file first, then rewrite `D:\1CODING\NextJS\digital-marketplace\src\middleware.ts`:
 
 ```typescript
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server';
 
-export async function middleware (req: NextRequest) {
-  const { cookies, nextUrl } = req
-  const token = cookies.get('payload-token')?.value
+export async function middleware(req: NextRequest) {
+  const { cookies, nextUrl } = req;
+  const token = cookies.get('payload-token')?.value;
 
-  const protectedRoutes = ['/sign-in', '/sign-up']
-  const authProtectedRoutes = ['/cart']
+  const protectedRoutes = ['/sign-in', '/sign-up'];
+  const authProtectedRoutes = ['/cart'];
 
   if (token && protectedRoutes.includes(nextUrl.pathname)) {
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_URL}/`)
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_URL}/`);
   }
 
   if (!token && authProtectedRoutes.includes(nextUrl.pathname)) {
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_URL}/sign-in?origin=cart`)
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/sign-in?origin=cart`,
+    );
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 ```
 
@@ -837,7 +879,7 @@ export default function Providers ({ children }: { children: ReactNode }) {
   const [trpcClient] = useState(() => trpc.createClient({
     links: [
       httpBatchLink({
-        url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/trpc`,
+        url: `/api/trpc`,
         async fetch (url, options) {
           return await fetch(url, { ...options, credentials: 'include' })
         }
@@ -958,6 +1000,21 @@ git add .
 git commit -m "fix: build fixes for Payload 3 migration"
 ```
 
+---
+
+### Task 19: Environment Variables
+
+Update `.env` file (manually — do not commit):
+
+| Variable                 | Value                                                 |
+| ------------------------ | ----------------------------------------------------- |
+| `NEXT_PUBLIC_SERVER_URL` | `https://your-app.vercel.app` (or Vercel preview URL) |
+| `PAYLOAD_SECRET`         | keep existing                                         |
+| `MONGODB_URL`            | keep existing (MongoDB Atlas URL)                     |
+| `GMAIL_SERVER_USER`      | keep existing                                         |
+| `GMAIL_SERVER_PASS`      | keep existing                                         |
+| `STRIPE_SECRET_KEY`      | keep existing                                         |
+| `STRIPE_WEBHOOK_SECRET`  | keep existing                                        
 ---
 
 ### Task 19: Environment Variables

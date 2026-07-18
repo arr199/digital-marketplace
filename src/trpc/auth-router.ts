@@ -3,6 +3,7 @@ import { publicProcedure, router } from './trpc'
 import { getPayloadClient } from '../server/get-payload'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+import { cookies } from 'next/headers'
 
 export const authRouter = router({
   createPayloadUser: publicProcedure
@@ -53,6 +54,13 @@ export const authRouter = router({
         })
 
         if (result.token) {
+          const cookieStore = await cookies()
+          cookieStore.set('payload-token', result.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+          })
           return { success: true, token: result.token }
         }
 
