@@ -201,12 +201,11 @@ export const ReceiptEmail = ({
   )
 }
 
-export const ReceiptEmailHtml = (
+export const ReceiptEmailHtml = async (
   props: ReceiptEmailProps
-): string =>
-  render(<ReceiptEmail {...props} />, {
-    pretty: true
-  })
+): Promise<string> =>
+  // no `pretty`: react-email's Prettier pass rejects this template's nested <td> markup and throws
+  await render(<ReceiptEmail {...props} />)
 
 const main = {
   fontFamily: '"Helvetica Neue",Helvetica,Arial,sans-serif',

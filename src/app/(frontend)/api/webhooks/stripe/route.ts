@@ -1,8 +1,8 @@
 import { getPayloadClient } from '@/server/get-payload'
 import type { Product } from '@/server/payload-types'
 import Stripe from 'stripe'
-import nodemailer from 'nodemailer'
 import { ReceiptEmailHtml } from '@/components/emails/receiptEmail'
+import { createMailTransport } from '@/lib/mailer'
 
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? ''
 
@@ -63,21 +63,13 @@ export async function POST (req: Request): Promise<Response> {
     })
 
     try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        secure: true,
-        port: 465,
-        auth: {
-          user: process.env.GMAIL_SERVER_USER,
-          pass: process.env.GMAIL_SERVER_PASS
-        }
-      })
+      const transporter = createMailTransport()
 
       await transporter.sendMail({
         from: process.env.GMAIL_SERVER_USER,
         to: user.email,
         text: 'Receipt',
-        html: ReceiptEmailHtml({
+        html: await ReceiptEmailHtml({
           date: new Date(),
           email: user.email,
           orderId: session.metadata.orderId,

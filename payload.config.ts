@@ -7,22 +7,14 @@ import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import sharp from 'sharp'
-import nodemailer from 'nodemailer'
 import { Users } from './src/collections/users'
 import { Products } from './src/collections/products/products'
 import { Media } from './src/collections/media'
 import { ProductFiles } from './src/collections/productFile'
 import { Orders } from './src/collections/orders'
+import { createMailTransport } from './src/lib/mailer'
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  secure: true,
-  port: 465,
-  auth: {
-    user: process.env.GMAIL_SERVER_USER,
-    pass: process.env.GMAIL_SERVER_PASS
-  }
-})
+const transporter = createMailTransport()
 
 export default buildConfig({
   secret: process.env.PAYLOAD_SECRET ?? '',

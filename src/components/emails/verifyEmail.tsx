@@ -112,6 +112,6 @@ const footer = {
   marginLeft: '4px'
 }
 
-export function VerifyEmail (props: RaycastMagicLinkEmailProps): string {
-  return render(<RaycastMagicLinkEmail {...props}></RaycastMagicLinkEmail>, { pretty: true })
+export async function VerifyEmail (props: RaycastMagicLinkEmailProps): Promise<string> {
+  return await render(<RaycastMagicLinkEmail {...props}></RaycastMagicLinkEmail>)
 }

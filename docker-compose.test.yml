@@ -1,0 +1,23 @@
+# Services for the Playwright test suite (see tests/README.md).
+# Start: pnpm test:services   Stop: pnpm test:services:down
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - '27018:27017'
+    tmpfs:
+      - /data/db
+
+  stripe-mock:
+    image: stripe/stripe-mock:v0.197.0
+    ports:
+      - '12111:12111'
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    environment:
+      # reverse-DNS of the client times out behind Docker's NAT and delays every SMTP greeting by ~8s
+      MP_SMTP_DISABLE_RDNS: 'true'
+    ports:
+      - '1025:1025'
+      - '8025:8025'

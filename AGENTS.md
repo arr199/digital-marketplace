@@ -8,7 +8,7 @@ Context for AI coding agents working in this repository.
 - **Anything outside the project folder must be reported to the user.** Work happens inside the repository folder (the directory containing `AGENTS.md`). Changes outside it are allowed, but every one of them must be explicitly reported to the user: what changed, where, and how to undo it. "Outside" means the home directory, global pnpm/npm config and global packages, the machine's Node install, environment variables, the MongoDB Atlas cluster's settings, the Stripe dashboard, the Vercel project, other drives and system locations. This includes side effects of tools (e.g. pnpm creating a package store on another drive, the agent writing to its own memory folder). Never hide or skip mentioning one.
 - **Never touch unrelated code.** Only modify code the current task requires. Do not refactor, clean up, reformat or "improve" anything unrelated to it.
 - **Never commit secrets.** No API keys, tokens, passwords or connection strings in code, config, logs or commit messages. Real values live only in the gitignored `.env` / `.env.production` files (and Vercel env vars). This covers `PAYLOAD_SECRET`, `MONGODB_URL`, Stripe keys, the webhook secret and the Gmail app password. Read them via `process.env`. Never print, echo or copy their values. Check diffs for credentials before handing work back.
-- **Test-first, always.** Write the failing test BEFORE the implementation. Bug fixes include a regression test that reproduces the bug. The repo has no test runner yet. Before the first test-first task, propose a setup (e.g. Playwright for E2E against `pnpm dev`, Vitest for pure logic) and get the user's OK before adding it.
+- **Test-first, always.** Write the failing test BEFORE the implementation. Bug fixes include a regression test that reproduces the bug. Tests are Playwright, in `tests/` (see `tests/README.md`): `tests/api/` for HTTP-level tests, `tests/e2e/` for browser flows.
 - **Testing philosophy (behavior over implementation).** Favor integration/E2E tests over unit tests; a test must survive a refactor. Tests assert the observable behavior of the real system: pages and redirects, tRPC procedures, Payload REST endpoints and access control, the Stripe webhook's effect on orders, rendered UI. Never assert implementation details. Never test mock behavior in place of app behavior. Mocks are only acceptable at true boundaries (Stripe API, SMTP).
 - **Review before done.** After completing a feature (not one-line fixes), run a code-review pass: dispatch a fresh code-review subagent to check the actual diff against the task requirements. Address or explicitly flag every finding before reporting completion.
 - Use **pnpm** (version pinned by `packageManager` in `package.json`). Never use `npm install` or `yarn`.
@@ -33,9 +33,13 @@ pnpm dev              # dev server (http://localhost:3000)
 pnpm build            # production build
 pnpm lint             # eslint (standard-with-typescript + next)
 pnpm generate:types   # regenerate src/server/payload-types.ts from collections
+pnpm test:services    # start test containers (Mongo, stripe-mock, Mailpit); needs Docker
+pnpm test             # Playwright: builds the app, seeds a test DB, runs tests/api + tests/e2e
+pnpm test:api         # API tests only
+pnpm test:e2e         # browser tests only
 ```
 
-There is no test suite yet (see the test-first rule above).
+Tests never use `.env` values: `tests/test-env.ts` sets every variable and refuses to run against non-local services. CI (GitHub flow) runs the same suite on every PR into `master` and every push to `master` (`.github/workflows/ci.yml`, check name `CI / playwright`). Pass Playwright flags through `pnpm exec playwright test ...`, because pnpm 12 swallows flags like `--reporter`.
 
 ## Layout
 
@@ -54,6 +58,9 @@ src/collections/             Users, Products, Media, ProductFiles, Orders
 src/trpc/                    appRouter (index.ts), auth-router, payment-router, trpc.ts (public/private procedures)
 src/server/get-payload.ts    getPayloadClient() — use this for the Local API on the server
 src/lib/payload.utils.ts     getServerSideUser(cookies) — current user in server components
+src/lib/mailer.ts            createMailTransport() — Gmail, or SMTP_HOST (Mailpit) in tests
+src/lib/stripe.ts            Stripe client; STRIPE_API_HOST/PORT/PROTOCOL point it at stripe-mock in tests
+tests/                       Playwright suite (api/, e2e/, seed.ts, test-env.ts); see tests/README.md
 src/middleware.ts            Redirects: /cart needs auth; signed-in users are kept out of /sign-in, /sign-up
 src/components/              UI; shadcn primitives in components/ui
 src/hooks/                   useCart (zustand), useAuth, useOnClickOutside
@@ -67,7 +74,7 @@ The two route groups each render their own `<html>`/`<body>` so Tailwind never r
 - **Roles**: `users.role` is `admin` | `user`. Sellers manage their own products in `/sell`. Admin-only fields and collections are hidden or locked by role in collection `access`/`admin.hidden`.
 - **Products** only show in the store when `approvedForSale === 'approved'` (set by an admin).
 - **Checkout flow**: cart page → `payment.createSession` (creates an Order, returns a Stripe Checkout URL) → Stripe → `/thank-you?orderId=...`. That page polls `payment.pollOrderStatus` until the webhook sets `isPaid`.
-- **Uploads** use local disk: `staticDir` is `src/server/media` and `src/server/products_files`. Payload resolves these from the process cwd (project root). This won't persist on Vercel, so a storage adapter (e.g. Vercel Blob) is still needed.
+- **Uploads** use local disk: `staticDir` is `src/server/media` and `src/server/products_files` (`UPLOADS_DIR` overrides the `src/server` part; tests use `.test-uploads`). Payload resolves these from the process cwd (project root). This won't persist on Vercel, so a storage adapter (e.g. Vercel Blob) is still needed.
 - `payload.config.ts` overrides DNS servers (`1.1.1.1`, `8.8.8.8`) so MongoDB Atlas SRV lookups work on the dev machine.
 - `NextResponse.redirect` in middleware needs absolute URLs: `new URL(path, req.url)`.
 

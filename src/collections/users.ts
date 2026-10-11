@@ -17,8 +17,8 @@ export const Users: CollectionConfig = {
   slug: 'users',
   auth: {
     verify: {
-      generateEmailHTML: ({ token }) => {
-        return VerifyEmail({ token, url: process.env.NEXT_PUBLIC_SERVER_URL ?? '' })
+      generateEmailHTML: async ({ token }) => {
+        return await VerifyEmail({ token, url: process.env.NEXT_PUBLIC_SERVER_URL ?? '' })
       }
     }
 
