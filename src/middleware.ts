@@ -8,11 +8,11 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
   const protectedRoutes = ['/cart'];
 
   if (token && authRoutes.includes(nextUrl.pathname)) {
-    return NextResponse.redirect('/');
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   if (!token && protectedRoutes.includes(nextUrl.pathname)) {
-    return NextResponse.redirect('/sign-in?origin=cart');
+    return NextResponse.redirect(new URL('/sign-in?origin=cart', req.url));
   }
 
   return NextResponse.next();

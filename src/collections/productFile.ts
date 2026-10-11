@@ -56,7 +56,7 @@ export const ProductFiles: CollectionConfig = {
     delete: ({ req }) => req.user?.role === 'admin'
   },
   upload: {
-    staticDir: 'products_files',
+    staticDir: 'src/server/products_files',
     mimeTypes: ['image/*', 'font/*', 'application/postscripts']
   },
   fields: [
