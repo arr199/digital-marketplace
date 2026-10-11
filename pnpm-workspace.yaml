@@ -2,16 +2,7 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
-minimumReleaseAgeExclude:
-  - nodemailer@7.0.7 || 7.0.11 || 8.0.4 || 8.0.5 || 8.0.8 || 8.0.9 || 9.0.1
-  - swiper@12.1.2
-  - minimatch@9.0.6 || 9.0.7
-  - dompurify@3.3.2 || 3.3.4 || 3.4.0 || 3.4.6 || 3.4.7 || 3.4.8 || 3.4.9 || 3.4.11
-  - postcss@8.5.10
-  - fast-uri@3.1.4
-  - sharp@0.35.0
-  - mongoose@8.24.1
-  - brace-expansion@5.0.8
+
 overrides:
   brace-expansion@<=5.0.7: ^5.0.8
   dompurify@<3.3.2: ^3.3.2
@@ -32,3 +23,4 @@ overrides:
   mongoose@>=8.0.0 <8.24.1: ^8.24.1
   postcss@<8.5.10: ^8.5.10
   sharp@<0.35.0: ^0.35.0
+  
