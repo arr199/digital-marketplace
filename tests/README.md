@@ -37,21 +37,22 @@ Mailpit's inbox is browsable at http://localhost:8025.
   an admin, a seller, a buyer and a shopper (all verified), two approved products and one pending, and one paid order
   for the buyer. It logs each user in once and writes ids and tokens to `tests/.auth/seed.json`.
 - Tests authenticate with those seeded tokens (`tokenFor(role)`). Don't log the seeded users in from tests in parallel:
-  Payload stores sessions on the user document and concurrent logins overwrite each other's sessions.
+  Payload stores sessions on the user document and concurrent logins overwrite each other's sessions. For cookie auth
+  use `authCookie(token)`, which also sends `Origin`: Payload's CSRF check rejects cookie-authenticated requests without
+  one of the app's own origins.
+- Uploads go to local disk: `test-env.ts` forces `BLOB_READ_WRITE_TOKEN` empty, overriding any value in `.env*`. The
+  Vercel Blob path is checked on a preview deployment (see `docs/deploy-vercel.md`).
 - `api/` tests use Playwright's HTTP client against tRPC (`/api/trpc/...`), Payload REST (`/api/...`), the Stripe webhook
-  and middleware redirects. `e2e/` tests drive Chromium through the real UI. Stripe's hosted checkout page is stubbed
+  and proxy (ex-middleware) redirects. `e2e/` tests drive Chromium through the real UI. Stripe's hosted checkout page is stubbed
   with `page.route`; everything else is the real app.
 - The app has three test-only switches, all unset in production: `STRIPE_API_HOST/PORT/PROTOCOL` (`src/lib/stripe.ts`),
   `SMTP_HOST/PORT` (`src/lib/mailer.ts`) and `UPLOADS_DIR` (media and product-file collections).
 
 ## Known bugs
 
-Tests named `KNOWN BUG` assert the current, buggy behaviour, so they pass while the defect exists and any unrelated
-failure still shows up. Fixing the bug makes the test fail: flip its final assertion to the correct behaviour and drop
-"KNOWN BUG" from its name.
-
-- **Anyone can register as admin** (`api/access-control.spec.ts`): the `role` field on `users` restricts `update` to
-  admins but has no `access.create`, so `POST /api/users` with `"role": "admin"` creates an admin account.
+None open. To document a defect without fixing it, name the test `KNOWN BUG: ...` and assert the current, buggy
+behaviour, so it passes while the defect exists and any unrelated failure still shows up. Fixing the bug makes it
+fail: flip the assertion to the correct behaviour and drop "KNOWN BUG" from the name.
 
 ## CI
 

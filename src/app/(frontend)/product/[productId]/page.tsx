@@ -4,6 +4,7 @@ import MaxWidthWrapper from '@/components/maxWidthWrapper'
 import ProductReel from '@/components/productReel'
 import API from '@/lib/API'
 import { formatPrice } from '@/lib/utils'
+import { PUBLIC_PRODUCT_SELECT } from '@/lib/public-product'
 import { getPayloadClient } from '@/server/get-payload'
 import { Check, Shield } from 'lucide-react'
 
@@ -28,7 +29,10 @@ export default async function Page ({ params }: PageProps): Promise<React.ReactE
   const { docs: products } = await payload.find({
     collection: 'products',
     limit: 1,
-    where: { id: { equals: productId }, approvedForSale: { equals: 'approved' } }
+    where: { id: { equals: productId }, approvedForSale: { equals: 'approved' } },
+    // the product is passed to client components; depth 1 so each image's `user` (the seller) isn't populated
+    select: PUBLIC_PRODUCT_SELECT,
+    depth: 1
   })
   const [product] = products
   if (!products[0]) return notFound()

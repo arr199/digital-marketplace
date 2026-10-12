@@ -82,7 +82,8 @@ async function seed (): Promise<void> {
     users: { admin: admin.id, seller: seller.id, buyer: buyer.id, shopper: shopper.id },
     products: { approvedA: approvedA.id, approvedB: approvedB.id, pending: pending.id },
     paidOrder: paidOrder.id,
-    mediaFile: approvedA.images[0].image.filename ?? null
+    mediaFile: approvedA.images[0].image.filename ?? null,
+    productFile: approvedA.product_files.filename ?? null
   }, null, 2))
 }
 

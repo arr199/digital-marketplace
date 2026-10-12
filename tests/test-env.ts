@@ -15,10 +15,14 @@ export const testEnv = {
   SMTP_PORT: '1025',
   STRIPE_SECRET_KEY: 'sk_test_mock',
   STRIPE_WEBHOOK_SECRET: 'whsec_test_secret',
-  STRIPE_API_HOST: 'localhost',
+  // an IP, not 'localhost': a hostname needs dns.lookup on libuv's small thread pool, which the image optimizer
+  // (sharp) can saturate under parallel tests, stalling checkout calls behind it
+  STRIPE_API_HOST: '127.0.0.1',
   STRIPE_API_PORT: '12111',
   STRIPE_API_PROTOCOL: 'http',
   UPLOADS_DIR: '.test-uploads',
+  // set (to empty) so a token in .env / .env.local can never switch the test server to the real Blob store
+  BLOB_READ_WRITE_TOKEN: '',
   NEXT_TELEMETRY_DISABLED: '1'
 }
 
@@ -27,8 +31,9 @@ export function assertSafeTestEnv (env: Record<string, string | undefined>): voi
   const problems: string[] = []
   if (!env.MONGODB_URL?.startsWith('mongodb://localhost:27018/')) problems.push(`MONGODB_URL=${env.MONGODB_URL ?? '(unset)'}`)
   if (env.STRIPE_SECRET_KEY !== 'sk_test_mock') problems.push('STRIPE_SECRET_KEY is not the stripe-mock key')
-  if (env.STRIPE_API_HOST !== 'localhost') problems.push('STRIPE_API_HOST is not localhost')
+  if (env.STRIPE_API_HOST !== '127.0.0.1') problems.push('STRIPE_API_HOST is not 127.0.0.1 (stripe-mock)')
   if (env.SMTP_HOST !== 'localhost') problems.push('SMTP_HOST is not localhost')
+  if (env.BLOB_READ_WRITE_TOKEN) problems.push('BLOB_READ_WRITE_TOKEN is set (tests must use local disk)')
   if (env.UPLOADS_DIR !== '.test-uploads') problems.push('UPLOADS_DIR is not .test-uploads') // the seed deletes this folder
   if (problems.length > 0) {
     throw new Error(`Refusing to run tests against non-test services:\n  ${problems.join('\n  ')}`)

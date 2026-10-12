@@ -49,4 +49,12 @@ test.describe('uploaded media', () => {
     expect(res.status()).toBe(200)
     expect(res.headers()['content-type']).toContain('image/')
   })
+
+  test('product image URLs with a query string go through the Next image optimizer', async ({ request }) => {
+    // With Vercel Blob storage, Payload appends ?prefix=<folder> to upload URLs; a neutral param exercises the same path
+    const src = encodeURIComponent(`/api/media/file/${seedData().mediaFile}?v=1`)
+    const res = await request.get(`/_next/image?url=${src}&w=640&q=75`)
+    expect(res.status()).toBe(200)
+    expect(res.headers()['content-type']).toContain('image/')
+  })
 })

@@ -20,7 +20,8 @@ const yourOwnOrPurchased: Access = async ({ req }): Promise<AccessResult> => {
   const { docs: orders } = await req.payload.find({
     collection: 'orders',
     depth: 2,
-    where: { user: { equals: user.id } }
+    // only paid orders unlock files: an order is created before payment, when checkout starts
+    where: { user: { equals: user.id }, isPaid: { equals: true } }
   })
   const purchasedProductsFileIds = orders.map((order) => {
     return order?.products.map< string[] | Product[]>((product: any) => {
@@ -57,7 +58,12 @@ export const ProductFiles: CollectionConfig = {
   },
   upload: {
     staticDir: `${process.env.UPLOADS_DIR ?? 'src/server'}/products_files`,
-    mimeTypes: ['image/*', 'font/*', 'application/postscripts']
+    mimeTypes: ['image/*', 'font/*', 'application/postscripts'],
+    // paid downloads are access-checked per user, so shared caches must never keep a copy
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('Cache-Control', 'private, no-store')
+      return headers
+    }
   },
   fields: [
     {

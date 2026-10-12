@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { authRouter } from './auth-router'
 import { publicProcedure, router } from './trpc'
 import { QueryValidatorSchema } from '../lib/zod-schemas'
+import { PUBLIC_PRODUCT_SELECT } from '../lib/public-product'
 import { getPayloadClient } from '../server/get-payload'
 import { paymentRouter } from './payment-router'
 
@@ -39,7 +40,8 @@ export const appRouter = router({
         sort,
         depth: 1,
         limit,
-        page
+        page,
+        select: PUBLIC_PRODUCT_SELECT
       })
 
       return { items, nextPage: hasNextPage ? nextPage : null }

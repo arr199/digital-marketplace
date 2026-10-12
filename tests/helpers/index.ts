@@ -10,6 +10,7 @@ export interface SeedData {
   products: { approvedA: string, approvedB: string, pending: string }
   paidOrder: string
   mediaFile: string
+  productFile: string
 }
 
 export function seedData (): SeedData {
@@ -23,7 +24,9 @@ export function tokenFor (role: Role): string {
   return seedData().tokens[role]
 }
 
-export const authCookie = (token: string): Record<string, string> => ({ Cookie: `payload-token=${token}` })
+// The session cookie as a same-origin browser sends it. Payload's CSRF check rejects cookie auth without an Origin
+// (or Sec-Fetch-Site) header from one of the app's own origins.
+export const authCookie = (token: string): Record<string, string> => ({ Cookie: `payload-token=${token}`, Origin: BASE_URL })
 export const authHeader = (token: string): Record<string, string> => ({ Authorization: `JWT ${token}` })
 
 // Positive control for negative-access tests: proves the token is accepted, so a 403 means "forbidden", not "anonymous"

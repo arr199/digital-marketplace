@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { authHeader, expectSignedInAs, tokenFor, seedData, uniqueEmail } from '../helpers'
+import { authCookie, authHeader, createVerifiedUser, expectSignedInAs, tokenFor, seedData, trpcMutation, trpcQuery, uniqueEmail } from '../helpers'
+import { BASE_URL } from '../test-env'
 
 const ownerId = (rel: string | { id: string }): string => (typeof rel === 'string' ? rel : rel.id)
 
@@ -77,17 +78,62 @@ test.describe('users', () => {
     expect(docs.map((u: any) => u.id)).toEqual([users.buyer])
   })
 
-  test('KNOWN BUG: public sign-up through the REST API can choose the admin role', async ({ request }) => {
-    // users.role restricts `update` to admins but has no `create` rule, so anyone can register as admin.
-    // This asserts the CURRENT (buggy) behaviour so any other failure is real. When fixing the bug,
-    // change the last assertion to expect 'user' (or the request to be rejected) and drop "KNOWN BUG".
-
+  test('public sign-up through the REST API cannot choose the admin role', async ({ request }) => {
     const email = uniqueEmail('escalate')
     const res = await request.post('/api/users', { data: { email, password: 'password-123', role: 'admin' } })
     expect(res.status()).toBe(201)
 
     const adminToken = tokenFor('admin')
     const { docs } = await (await request.get(`/api/users?where[email][equals]=${encodeURIComponent(email)}`, { headers: authHeader(adminToken) })).json()
-    expect(docs[0].role).toBe('admin')
+    expect(docs[0].role).toBe('user')
+  })
+})
+
+// Read-only procedure, so these never create orders that other tests could pick up
+test.describe('CSRF', () => {
+  test('a cookie-authenticated request from another site is rejected', async ({ request }) => {
+    const { status } = await trpcQuery(
+      request,
+      'payment.pollOrderStatus',
+      { orderId: seedData().paidOrder },
+      { Cookie: `payload-token=${tokenFor('buyer')}`, Origin: 'https://evil.example' }
+    )
+    expect(status).toBe(401)
+  })
+
+  test('the same request from the app\x27s own origin is accepted', async ({ request }) => {
+    const { status, body } = await trpcQuery(
+      request,
+      'payment.pollOrderStatus',
+      { orderId: seedData().paidOrder },
+      { Cookie: `payload-token=${tokenFor('buyer')}`, Origin: BASE_URL }
+    )
+    expect(status).toBe(200)
+    expect(body.result.data).toEqual({ isPaid: true })
+  })
+})
+
+test.describe('paid product files', () => {
+  test('a buyer can download the file of a product they paid for', async ({ request }) => {
+    const res = await request.get(`/api/product_files/file/${seedData().productFile}`, { headers: authHeader(tokenFor('buyer')) })
+    expect(res.status()).toBe(200)
+  })
+
+  test('downloaded paid files are not stored by shared caches', async ({ request }) => {
+    const res = await request.get(`/api/product_files/file/${seedData().productFile}`, { headers: authHeader(tokenFor('buyer')) })
+    expect(res.status()).toBe(200)
+    expect(res.headers()['cache-control']).toMatch(/private/)
+    expect(res.headers()['cache-control']).toMatch(/no-store/)
+  })
+
+  test('starting a checkout without paying does not unlock the product file', async ({ request }) => {
+    const credentials = await createVerifiedUser(request, 'unpaid')
+    const { token } = await (await request.post('/api/users/login', { data: credentials })).json()
+
+    const checkout = await trpcMutation(request, 'payment.createSession', { productIds: [seedData().products.approvedA] }, authCookie(token))
+    expect(checkout.status).toBe(200) // an unpaid order now exists for this user
+
+    const res = await request.get(`/api/product_files/file/${seedData().productFile}`, { headers: authHeader(token) })
+    expect(res.status()).toBe(403)
   })
 })

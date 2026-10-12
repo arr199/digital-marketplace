@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-export async function middleware(req: NextRequest): Promise<NextResponse> {
+export async function proxy(req: NextRequest): Promise<NextResponse> {
   const { cookies, nextUrl } = req;
   const token = cookies.get('payload-token')?.value;
 

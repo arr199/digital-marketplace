@@ -12,7 +12,7 @@ Context for AI coding agents working in this repository.
 - **Testing philosophy (behavior over implementation).** Favor integration/E2E tests over unit tests; a test must survive a refactor. Tests assert the observable behavior of the real system: pages and redirects, tRPC procedures, Payload REST endpoints and access control, the Stripe webhook's effect on orders, rendered UI. Never assert implementation details. Never test mock behavior in place of app behavior. Mocks are only acceptable at true boundaries (Stripe API, SMTP).
 - **Review before done.** After completing a feature (not one-line fixes), run a code-review pass: dispatch a fresh code-review subagent to check the actual diff against the task requirements. Address or explicitly flag every finding before reporting completion.
 - Use **pnpm** (version pinned by `packageManager` in `package.json`). Never use `npm install` or `yarn`.
-- Don't edit generated files by hand: `src/server/payload-types.ts` (run `pnpm generate:types`) and `src/app/(payload)/sell/importMap.js`.
+- Don't edit generated files by hand: `src/server/payload-types.ts` and `src/app/(payload)/sell/importMap.js`. The Payload CLI (`pnpm generate:types`, `payload generate:importmap`) currently fails to load the config (Lexical uses top-level await in this CommonJS project); `pnpm dev` regenerates the import map on start, or call Payload's `generateImportMap(config)` from a tsx script.
 - `dist/` and `build/` are gitignored leftovers from the old Express/Payload 2 setup. Ignore them.
 
 ## Stack
@@ -60,8 +60,12 @@ src/server/get-payload.ts    getPayloadClient() — use this for the Local API o
 src/lib/payload.utils.ts     getServerSideUser(cookies) — current user in server components
 src/lib/mailer.ts            createMailTransport() — Gmail, or SMTP_HOST (Mailpit) in tests
 src/lib/stripe.ts            Stripe client; STRIPE_API_HOST/PORT/PROTOCOL point it at stripe-mock in tests
+src/lib/server-url.ts        getServerUrl() for links (emails, Stripe redirects), getTrustedOrigins() for Payload csrf
+src/lib/public-product.ts    PUBLIC_PRODUCT_SELECT / PublicProduct: what public product queries may return
+scripts/                     migrate-uploads-to-blob.ts (one-off: legacy disk uploads → Blob, one random folder per doc)
+docs/deploy-vercel.md        Dashboard steps for deploying (Vercel, Atlas, Stripe, GitHub)
 tests/                       Playwright suite (api/, e2e/, seed.ts, test-env.ts); see tests/README.md
-src/middleware.ts            Redirects: /cart needs auth; signed-in users are kept out of /sign-in, /sign-up
+src/proxy.ts                 Next 16 proxy (ex-middleware): /cart needs auth; signed-in users are kept out of /sign-in, /sign-up
 src/components/              UI; shadcn primitives in components/ui
 src/hooks/                   useCart (zustand), useAuth, useOnClickOutside
 ```
@@ -70,17 +74,19 @@ The two route groups each render their own `<html>`/`<body>` so Tailwind never r
 
 ## Domain notes
 
-- **Auth**: Payload auth on `users`, with email verification. The session is the `payload-token` cookie. tRPC `auth.loginUser` sets it. `privateProcedure` calls `payload.auth({ headers })`.
+- **Auth**: Payload auth on `users`, with email verification. The session is the `payload-token` cookie. tRPC `auth.loginUser` sets it. `privateProcedure` calls `payload.auth({ headers })`. Payload `csrf` lists the app's own origins (`getTrustedOrigins()`), so cookie auth needs a same-origin `Origin`/`Sec-Fetch-Site` header; server-side lookups (`getServerSideUser`) send the token as `Authorization: JWT <token>` instead. Don't set Payload `serverURL`: it makes upload URLs absolute.
 - **Roles**: `users.role` is `admin` | `user`. Sellers manage their own products in `/sell`. Admin-only fields and collections are hidden or locked by role in collection `access`/`admin.hidden`.
 - **Products** only show in the store when `approvedForSale === 'approved'` (set by an admin).
 - **Checkout flow**: cart page → `payment.createSession` (creates an Order, returns a Stripe Checkout URL) → Stripe → `/thank-you?orderId=...`. That page polls `payment.pollOrderStatus` until the webhook sets `isPaid`.
-- **Uploads** use local disk: `staticDir` is `src/server/media` and `src/server/products_files` (`UPLOADS_DIR` overrides the `src/server` part; tests use `.test-uploads`). Payload resolves these from the process cwd (project root). This won't persist on Vercel, so a storage adapter (e.g. Vercel Blob) is still needed.
-- `payload.config.ts` overrides DNS servers (`1.1.1.1`, `8.8.8.8`) so MongoDB Atlas SRV lookups work on the dev machine.
-- `NextResponse.redirect` in middleware needs absolute URLs: `new URL(path, req.url)`.
+- **Uploads**: with `BLOB_READ_WRITE_TOKEN` set (Vercel) they go to Vercel Blob under `media/` and `product_files/` (`vercelBlobStorage` in `payload.config.ts`, client uploads on); otherwise to local disk, `staticDir` `src/server/media` and `src/server/products_files` (`UPLOADS_DIR` overrides the `src/server` part; tests use `.test-uploads`). Either way files are served through Payload's access-checked `/api/<collection>/file/...` routes; with Blob, Payload appends `?prefix=<folder>` to upload URLs, which `images.localPatterns` in `next.config.mjs` allows for `/api/media/file/**`.
+- **Paid files** (`product_files`): readable by their seller, admins, and users with a **paid** order containing the product (`isPaid`; orders exist from checkout start). Served with `Cache-Control: private, no-store`.
+- **Public product data**: storefront queries use `PUBLIC_PRODUCT_SELECT` and depth 1 so paid `product_files` and the seller's account never reach the browser.
+- `payload.config.ts` overrides DNS servers (`1.1.1.1`, `8.8.8.8`) so MongoDB Atlas SRV lookups work on the dev machine; skipped on Vercel (`process.env.VERCEL`).
+- `NextResponse.redirect` in the proxy needs absolute URLs: `new URL(path, req.url)`.
 
 ## Environment variables (`.env`)
 
-`PAYLOAD_SECRET`, `MONGODB_URL`, `NEXT_PUBLIC_SERVER_URL`, `PORT`, `GMAIL_SERVER_USER`, `GMAIL_SERVER_PASS`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`. Never print or commit their values (see "Never commit secrets" above).
+`PAYLOAD_SECRET`, `MONGODB_URL`, `NEXT_PUBLIC_SERVER_URL`, `PORT`, `GMAIL_SERVER_USER`, `GMAIL_SERVER_PASS`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, optional `STRIPE_TRANSACTION_FEE_PRICE_ID`, and on Vercel `BLOB_READ_WRITE_TOKEN` (see `docs/deploy-vercel.md`). Never print or commit their values (see "Never commit secrets" above).
 
 ## Code style
 

@@ -1,11 +1,11 @@
 import { useCart } from '@/hooks/useCart'
 import API from '@/lib/API'
 import { formatPrice } from '@/lib/utils'
-import { type Product } from '@/server/payload-types'
+import { type PublicProduct } from '@/lib/public-product'
 import { ImageIcon, X } from 'lucide-react'
 import Image from 'next/image'
 
-export default function CardItem ({ product }: { product: Product }): React.ReactElement {
+export default function CardItem ({ product }: { product: PublicProduct }): React.ReactElement {
   const { removeItem } = useCart()
   const image = (product?.images?.[0]?.image as any)?.url
 

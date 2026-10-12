@@ -3,25 +3,11 @@ import { withPayload } from "@payloadcms/next/withPayload";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      {
-        hostname: "digital-marketplace.up.railway.app",
-        pathname: "/**",
-        port: "",
-        protocol: "https",
-      },
-      {
-        hostname: "localhost",
-        pathname: "**",
-        port: "3400",
-        protocol: "http",
-      },
-      {
-        hostname: "digital-marketplace-ghencuyfzq-nw.a.run.app",
-        pathname: "**",
-        port: "",
-        protocol: "https",
-      },
+    // Upload URLs are relative (/api/media/file/...), so no remotePatterns. With Vercel Blob storage Payload appends
+    // ?prefix=<folder> to them, which Next's default localPatterns (no query strings) would reject.
+    localPatterns: [
+      { pathname: "/api/media/file/**" },
+      { pathname: "/**", search: "" },
     ],
   },
 };

@@ -1,4 +1,5 @@
 import { VerifyEmail } from '../components/emails/verifyEmail'
+import { getServerUrl } from '../lib/server-url'
 import type { CollectionConfig, Access } from 'payload'
 
 const AdminAndOwner: Access = ({ req }) => {
@@ -18,7 +19,7 @@ export const Users: CollectionConfig = {
   auth: {
     verify: {
       generateEmailHTML: async ({ token }) => {
-        return await VerifyEmail({ token, url: process.env.NEXT_PUBLIC_SERVER_URL ?? '' })
+        return await VerifyEmail({ token, url: getServerUrl() })
       }
     }
 
@@ -72,6 +73,7 @@ export const Users: CollectionConfig = {
 
       },
       access: {
+        create: ({ req }) => req.user?.role === 'admin',
         update: ({ req }) => req.user?.role === 'admin'
 
       },

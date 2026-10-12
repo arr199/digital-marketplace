@@ -1,6 +1,6 @@
 import { expect, test, type APIRequestContext } from '@playwright/test'
 import { authCookie, authHeader, tokenFor, seedData, signedStripeEvent, trpcMutation, trpcQuery, waitForEmail } from '../helpers'
-import { PRODUCTS, USERS } from '../test-env'
+import { BASE_URL, PRODUCTS, USERS } from '../test-env'
 
 // Creates a checkout session as the buyer and returns the new (unpaid) order
 async function createOrder (request: APIRequestContext): Promise<{ id: string, url: string }> {
@@ -76,5 +76,6 @@ test.describe('Stripe webhook', () => {
     const receipt = await waitForEmail(request, USERS.buyer.email)
     expect(receipt.html).toContain(order.id)
     expect(receipt.html).toContain(PRODUCTS.approvedA)
+    expect(receipt.html).toContain(`src="${BASE_URL}/api/media/file/`) // absolute, so mail clients can load it
   })
 })

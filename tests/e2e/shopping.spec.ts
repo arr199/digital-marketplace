@@ -33,7 +33,9 @@ test('a shopper adds a product to the cart and checks out with Stripe', async ({
   await expect(page.getByRole('link', { name: PRODUCTS.approvedA })).toBeVisible()
   await page.getByRole('button', { name: 'Checkout' }).click()
 
-  await expect(page).toHaveURL(/^https:\/\/checkout\.stripe\.com\//)
+  // Locally the Next image optimizer (sharp) shares the CPU with the server; right after a build, with a cold image
+  // cache and parallel browsers, the checkout round trip can exceed the default 5s
+  await expect(page).toHaveURL(/^https:\/\/checkout\.stripe\.com\//, { timeout: 15_000 })
   await expect(page.getByText('Stripe Checkout (stub)')).toBeVisible()
 })
 
