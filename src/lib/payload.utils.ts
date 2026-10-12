@@ -10,8 +10,10 @@ export async function getServerSideUser (
 
   if (!token) return { user: null }
 
+  // Pass the token as a JWT header: Payload's CSRF check rejects cookie auth without Origin/Sec-Fetch-Site,
+  // which a server-to-server call like this one never has
   const headers = new Headers()
-  headers.set('Cookie', `payload-token=${token}`)
+  headers.set('Authorization', `JWT ${token}`)
 
   try {
     const payload = await getPayloadClient({})

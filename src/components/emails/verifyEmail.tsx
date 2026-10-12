@@ -13,6 +13,7 @@ import {
   render
 } from '@react-email/components'
 import * as React from 'react'
+import { getServerUrl } from '../../lib/server-url'
 
 interface RaycastMagicLinkEmailProps {
   token: string
@@ -28,7 +29,7 @@ export const RaycastMagicLinkEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-email-sent.png`}
+            src={`${getServerUrl()}/hippo-email-sent.png`}
             width={48}
             height={48}
             alt="Hippo image"
@@ -50,7 +51,7 @@ export const RaycastMagicLinkEmail = ({
           </Text>
           <Hr style={hr} />
           <Img
-            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-email-sent.png`}
+            src={`${getServerUrl()}/hippo-email-sent.png`}
             width={32}
             height={32}
             style={{
@@ -112,6 +113,6 @@ const footer = {
   marginLeft: '4px'
 }
 
-export function VerifyEmail (props: RaycastMagicLinkEmailProps): string {
-  return render(<RaycastMagicLinkEmail {...props}></RaycastMagicLinkEmail>, { pretty: true })
+export async function VerifyEmail (props: RaycastMagicLinkEmailProps): Promise<string> {
+  return await render(<RaycastMagicLinkEmail {...props}></RaycastMagicLinkEmail>)
 }

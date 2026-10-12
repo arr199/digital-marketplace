@@ -2,11 +2,11 @@
 import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { useCart } from '@/hooks/useCart'
-import { type Product } from '@/server/payload-types'
+import { type PublicProduct } from '@/lib/public-product'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
-export default function AddToCartButton ({ product }: { product: Product }): React.ReactElement {
+export default function AddToCartButton ({ product }: { product: PublicProduct }): React.ReactElement {
   const [isSuccess, setIsSuccess] = useState<boolean>()
   const { addItem, items } = useCart()
 

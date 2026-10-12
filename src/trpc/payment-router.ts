@@ -4,6 +4,7 @@ import { privateProcedure, router } from './trpc'
 import { z } from 'zod'
 import { getPayloadClient } from '../server/get-payload'
 import { stripe } from '../lib/stripe'
+import { getRequestBaseUrl } from '../lib/server-url'
 import type Stripe from 'stripe'
 
 export const paymentRouter = router({
@@ -39,7 +40,8 @@ export const paymentRouter = router({
       // CREATING OUR LINE ITEMS TO PUSH TO STRIPE
       const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = []
       lineItems.push({
-        price: 'price_1ORDGjL4C9n3JIf87Kswue7f',
+        // the transaction-fee price must exist in the Stripe account/mode of STRIPE_SECRET_KEY
+        price: process.env.STRIPE_TRANSACTION_FEE_PRICE_ID ?? 'price_1ORDGjL4C9n3JIf87Kswue7f',
         quantity: 1,
         adjustable_quantity: {
           enabled: false
@@ -53,10 +55,11 @@ export const paymentRouter = router({
         })
       })
       // CONNECTING TO STRIPE
+      const baseUrl = getRequestBaseUrl(ctx.headers)
       try {
         const stripeSession = await stripe.checkout.sessions.create({
-          success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
+          success_url: `${baseUrl}/thank-you?orderId=${order.id}`,
+          cancel_url: `${baseUrl}/cart`,
           payment_method_types: ['card', 'paypal'],
           mode: 'payment',
           metadata: {

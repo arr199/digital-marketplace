@@ -1,7 +1,7 @@
 'use client'
 
 import { type TQueryValidatorSchema } from '../lib/zod-schemas'
-import { type Product } from '../server/payload-types'
+import { type PublicProduct } from '../lib/public-product'
 import { trpc } from '../trpc/client'
 import Link from 'next/link'
 import ProductListing from './productListing'
@@ -23,7 +23,7 @@ export default function ProductReel ({ title, subtitle, href, query }: ProductRe
 
   const products = data?.pages.flatMap((page) => page.items)
 
-  let map: Array<Product | null> = []
+  let map: Array<PublicProduct | null> = []
   if (products?.length) {
     map = products
   } else if (isLoading) {

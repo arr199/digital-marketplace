@@ -1,5 +1,5 @@
 'use client'
-import { type Product } from '../server/payload-types'
+import { type PublicProduct } from '../lib/public-product'
 import { useEffect, useState } from 'react'
 import { Skeleton } from './ui/skeleton'
 import Link from 'next/link'
@@ -8,7 +8,7 @@ import API from '../lib/API'
 import ImageSlider from './imageSlider'
 
 interface ProductListingProps {
-  product: Product | null
+  product: PublicProduct | null
   index: number
 
 }

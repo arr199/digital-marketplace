@@ -35,7 +35,7 @@ export const Media: CollectionConfig = {
     update: isAdminOrHasAccessToImages()
   },
   upload: {
-    staticDir: 'media',
+    staticDir: `${process.env.UPLOADS_DIR ?? 'src/server'}/media`,
     imageSizes: [{
       name: 'thumbnail',
       width: 400,

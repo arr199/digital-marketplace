@@ -1,14 +1,14 @@
-import { type Product } from '@/server/payload-types'
+import { type PublicProduct } from '@/lib/public-product'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 export interface CartItem {
-  product: Product
+  product: PublicProduct
 }
 
 export interface CartState {
   items: CartItem[]
-  addItem: (product: Product) => void
+  addItem: (product: PublicProduct) => void
   removeItem: (productId: string) => void
   clearCart: () => void
 }

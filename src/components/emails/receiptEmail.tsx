@@ -1,4 +1,5 @@
 import { formatPrice } from '../../lib/utils'
+import { getServerUrl } from '../../lib/server-url'
 import { type Product } from '../../server/payload-types'
 
 import {
@@ -47,7 +48,7 @@ export const ReceiptEmail = ({
           <Section>
             <Column>
               <Img
-                src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-email-sent.png`}
+                src={`${getServerUrl()}/hippo-email-sent.png`}
                 width='100'
                 height='100'
                 alt='DigitalHippo'
@@ -107,7 +108,7 @@ export const ReceiptEmail = ({
                   image.url
                     ? (
                     <Img
-                      src={image.url}
+                      src={`${getServerUrl()}${image.url}`} // upload URLs are relative; mail clients need absolute
                       width='64'
                       height='64'
                       alt='Product Image'
@@ -133,7 +134,7 @@ export const ReceiptEmail = ({
                       )
                     : null}
                   <Link
-                    href={`${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${orderId}`}
+                    href={`${getServerUrl()}/thank-you?orderId=${orderId}`}
                     style={productLink}>
                     Download Asset
                   </Link>
@@ -201,12 +202,11 @@ export const ReceiptEmail = ({
   )
 }
 
-export const ReceiptEmailHtml = (
+export const ReceiptEmailHtml = async (
   props: ReceiptEmailProps
-): string =>
-  render(<ReceiptEmail {...props} />, {
-    pretty: true
-  })
+): Promise<string> =>
+  // no `pretty`: react-email's Prettier pass rejects this template's nested <td> markup and throws
+  await render(<ReceiptEmail {...props} />)
 
 const main = {
   fontFamily: '"Helvetica Neue",Helvetica,Arial,sans-serif',
